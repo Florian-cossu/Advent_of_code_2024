@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AoC - Day 1 part I</title>
+    <script src="../lib/js/resultDisplay.js"></script>
+    <link rel="stylesheet" href="../Style/style.css">
+</head>
+
+<body>
+    <div id="card">
+        <h1>Advent of Code - Day 1 part I</h1>
+        <textarea id="input" placeholder="Enter your input here (e.g., '1 3\n6 2\n8 5')"></textarea>
+        <button class="button" type="button" onclick="strParse()">Test</button>
+        <script>
+            let distanceSum = 0;
+            
+            function strParse() {
+                let inputSrc = document.getElementById('input').value;
+
+                // Split the input into lines
+                let strArr = inputSrc.split('\n');
+
+                let leftSide = [];
+                let rightSide = [];
+
+                // Parse each line into separate arrays
+                strArr.forEach(line => {
+                    let parts = line.trim().split(/\s+/); // Split by whitespace
+                    if (parts.length === 2) { // Ensure exactly two numbers per line
+                        leftSide.push(parseInt(parts[0], 10));
+                        rightSide.push(parseInt(parts[1], 10));
+                    }
+                });
+
+                // Sort both sides independently
+                leftSide.sort((a, b) => a - b);
+                rightSide.sort((a, b) => a - b);
+
+                // Calculate the distance sum
+                distanceSum = 0; // Reset the sum
+                for (let i = 0; i < leftSide.length; i++) {
+                    distanceSum += Math.abs(rightSide[i] - leftSide[i]); // Absolute difference
+                }
+
+                console.log("Left side:", leftSide);
+                console.log("Right side:", rightSide);
+                console.log("Distance sum:", distanceSum);
+
+                resultDisplay(distanceSum); // Update the result display
+            }
+        </script>
+        <div id="resultDisplay">
+            <!-- Result display -->
+        </div>
+    </div>
+</body>
+</html>
