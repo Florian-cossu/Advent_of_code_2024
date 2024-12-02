@@ -10,34 +10,56 @@
     <div id="card">
         <a href="../index.html" class="homeLink">→ Home</a>
         <h1>Advent of Code - Day 2 part I</h1>
-        <textarea id="input" placeholder="Enter your input here (e.g., '1 3\n6 2\n8 5')"></textarea>
+        <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
             let safeReportsSum = 0;
-            
+
             function strParse() {
-                let inputSrc = document.getElementById('input').value;
+                safeReportsSum = 0; // Reset the sum
+                const inputSrc = document.getElementById('input').value;
 
                 // Split the input into lines
-                let strArr = inputSrc.split('\n');
+                const strArr = inputSrc.split('\n');
 
-                let leftSide = [];
-                let rightSide = [];
+                // Parse each line into an array of numbers
+                const arrayOfArrays = strArr.map(line => 
+                    line.trim().split(/\s+/).map(num => parseInt(num, 10))
+                );
 
-                // Parse each line into separate arrays
-                strArr.forEach(line => {
-                    let levels = line.trim().split(/\s+/); // Split by whitespace
-                    
-                    for (level of levels) {
-                        let levelDiffs = [];
-                        for (let i=0; i<levels.length; i++) {
-                            levelDiffs.push(levels[i+1] - levels[i]);
+                function isSafeReport(arr) {
+                    if (arr.length < 2) return true; // Single element or empty array is safe
+
+                    let isIncreasing = null; // Track direction (null initially)
+
+                    for (let i = 1; i < arr.length; i++) {
+                        const diff = arr[i] - arr[i - 1];
+
+                        if (diff < -3 || diff > 3 || diff === 0) {
+                            // Difference not within allowed range or no change
+                            return false;
                         }
-                        
+
+                        // Determine direction
+                        if (isIncreasing === null) {
+                            isIncreasing = diff > 0; // First direction
+                        } else if ((isIncreasing && diff < 0) || (!isIncreasing && diff > 0)) {
+                            // Direction change detected
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                // Count safe reports
+                arrayOfArrays.forEach(innerArray => {
+                    if (isSafeReport(innerArray)) {
+                        safeReportsSum++;
                     }
                 });
 
-                resultDisplay(safeReportsSum); // Update the result display
+                resultDisplay(safeReportsSum); // Display the result
             }
         </script>
         <div id="resultDisplay">

@@ -13,44 +13,47 @@
         <textarea id="input" placeholder="Enter your input here (e.g., '1 3\n6 2\n8 5')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            let similaritySum = 0;
-
+            let safeReportsSum = 0;
+            
             function strParse() {
+                safeReportsSum = 0; // Reset the sum
                 let inputSrc = document.getElementById('input').value;
 
                 // Split the input into lines
                 let strArr = inputSrc.split('\n');
 
-                let leftSide = [];
-                let rightSide = [];
+                // Parse each line into an array of numbers
+                let arrayOfArrays = strArr.map(line => 
+                    line.trim().split(/\s+/).map(num => parseInt(num, 10))
+                );
 
-                // Parse each line into separate arrays
-                strArr.forEach(line => {
-                    let parts = line.trim().split(/\s+/); // Split by whitespace
-                    if (parts.length === 2) { // Ensure exactly two numbers per line
-                        leftSide.push(parseInt(parts[0], 10));
-                        rightSide.push(parseInt(parts[1], 10));
+                // Function to check if a sequence is valid
+                function isValidSequence(arr) {
+                    return arr.reduce((isValid, current, index, array) => {
+                        if (!isValid) return false; // If already invalid, stop checking
+                        if (index === 0) return true; // Skip first element
+                        const diff = current - array[index - 1];
+                        if (diff < -3 || diff > 3 || diff === 0) {
+                            // Difference not within allowed range or no change
+                            return false;
+                        }
+                        return Math.abs(diff) >= 1 && Math.abs(diff) <= 3;
+                    }, true);
+                }
+
+                // Check all arrays
+                arrayOfArrays.forEach(innerArray => {
+                    const isIncreasing = isValidSequence(innerArray);
+                    const isDecreasing = isValidSequence(innerArray.slice().reverse());
+                    if (isIncreasing || isDecreasing) {
+                        safeReportsSum++;
                     }
+
+                    isIncreasing || isDecreasing? console.log(innerArray):null;
+                    return isIncreasing || isDecreasing
                 });
 
-                // Sort both sides independently
-                leftSide.sort((a, b) => a - b);
-                rightSide.sort((a, b) => a - b);
-
-                similaritySum = 0; // Reset the sum
-
-                console.log("Left side:", leftSide);
-                console.log("Right side:", rightSide);
-
-                // Count occurrences and calculate similarity sum
-                leftSide.forEach(num => {
-                    let count = rightSide.filter(rightNum => rightNum === num).length;
-                    similaritySum += num * count; // Multiply the number by its count and add to the sum
-                });
-
-                console.log("Similarity Sum:", similaritySum);
-
-                resultDisplay(similaritySum); // Update the result display
+                resultDisplay(safeReportsSum); // Display the result
             }
         </script>
         <div id="resultDisplay">
