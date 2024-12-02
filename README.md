@@ -29,7 +29,7 @@ I'm not a developper. I'm a linguist.
 
 | Day | Status | Comments |
 | :-: | :----: | :------- |
-|  1  |   ✅   |          |
+|  [1](Day_01)  |   ✅   |          |
 |  2  |        |          |
 |  3  |        |          |
 |  4  |        |          |
