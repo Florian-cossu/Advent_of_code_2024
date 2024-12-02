@@ -15,7 +15,6 @@ Since I am a Javascript noob I decided to try and do this challenge in JS to get
 - Documentation (Look at what functions do)
 - [Stack Overflow](https://stackoverflow.com/) (For quick language specific questions)
 - [Chat GPT](https://chat.openai.com/) (To ask more specific question or ask about code readability and logic)
-- [AoC Fornwall](https://aoc.fornwall.net/) (to get the expected result with someone else's working code to check whether I did wrong or not)
 
 ## Why do this ?
 
