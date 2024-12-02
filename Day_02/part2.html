@@ -18,6 +18,7 @@
             function strParse() {
                 safeReportsSum = 0; // Reset the sum
                 let inputSrc = document.getElementById('input').value;
+                dataArray = [];
 
                 // Split the input into lines
                 let strArr = inputSrc.split('\n');
@@ -27,31 +28,54 @@
                     line.trim().split(/\s+/).map(num => parseInt(num, 10))
                 );
 
-                // Function to check if a sequence is valid
-                function isValidSequence(arr) {
-                    return arr.reduce((isValid, current, index, array) => {
-                        if (!isValid) return false; // If already invalid, stop checking
-                        if (index === 0) return true; // Skip first element
-                        const diff = current - array[index - 1];
-                        if (diff < -3 || diff > 3 || diff === 0) {
-                            // Difference not within allowed range or no change
-                            return false;
-                        }
-                        return Math.abs(diff) >= 1 && Math.abs(diff) <= 3;
-                    }, true);
-                }
+                for (let line of arrayOfArrays) {
+                    let isIncreasing = false;
+                    let isDecreasing = false;
+                    let isValid = true;
+                    let originalLineLength = line.length;
 
-                // Check all arrays
-                arrayOfArrays.forEach(innerArray => {
-                    const isIncreasing = isValidSequence(innerArray);
-                    const isDecreasing = isValidSequence(innerArray.slice().reverse());
-                    if (isIncreasing || isDecreasing) {
-                        safeReportsSum++;
+                    for (let i = 1; i < line.length; i++) {
+                        const diff = line[i] - line[i - 1];
+
+                        // Determine direction based on the first valid difference
+                        if (i === 1) {
+                            if (diff > 0) isIncreasing = true;
+                            else if (diff < 0) isDecreasing = true;
+                            else {
+                                isValid = false; // Same values are not allowed
+                                break;
+                            }
+                        }
+
+                        // Check for consistency and valid differences
+                        if ((isIncreasing && diff < 0) || (isDecreasing && diff > 0) && (originalLineLength - line.length >= 1)) {
+                            line.splice(i, 1);
+                            i = i -1;
+                        } else if ((isIncreasing && diff < 0) || (isDecreasing && diff > 0)) {
+                            isValid = false;
+                            break;
+                        } else if (isIncreasing && (diff < 1 || diff > 3) && (originalLineLength - line.length >= 1)) {
+                            isValid = false;
+                            break;
+                        } else if (isIncreasing && (diff < 1 || diff > 3)) {
+                            line.splice(i, 1);
+                            i = i -1;
+                        } else if (isDecreasing && (diff > -1 || diff < -3)  && (originalLineLength - line.length >= 1)) {
+                            isValid = false;
+                            break;
+                        } else if (isDecreasing && (diff > -1 || diff < -3)) {
+                            line.splice(i, 1);
+                            i = i -1;
+                        }
                     }
 
-                    isIncreasing || isDecreasing? console.log(innerArray):null;
-                    return isIncreasing || isDecreasing
-                });
+                    if (isValid) {
+                        safeReportsSum++;
+                        console.log("Safe:", line);
+                    } else {
+                        console.log("Unsafe:", line);
+                    }
+                }
 
                 resultDisplay(safeReportsSum); // Display the result
             }
