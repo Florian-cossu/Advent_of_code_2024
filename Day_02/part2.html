@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>AoC - Day 1 part I</title>
+    <title>AoC - Day 2 part II</title>
     <script src="../lib/js/resultDisplay.js"></script>
     <link rel="stylesheet" href="../Style/style.css">
 </head>
@@ -9,12 +9,12 @@
 <body>
     <div id="card">
         <a href="../index.html" class="homeLink">→ Home</a>
-        <h1>Advent of Code - Day 1 part I</h1>
+        <h1>Advent of Code - Day 2 part II</h1>
         <textarea id="input" placeholder="Enter your input here (e.g., '1 3\n6 2\n8 5')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            let distanceSum = 0;
-            
+            let similaritySum = 0;
+
             function strParse() {
                 let inputSrc = document.getElementById('input').value;
 
@@ -37,17 +37,20 @@
                 leftSide.sort((a, b) => a - b);
                 rightSide.sort((a, b) => a - b);
 
-                // Calculate the distance sum
-                distanceSum = 0; // Reset the sum
-                for (let i = 0; i < leftSide.length; i++) {
-                    distanceSum += Math.abs(rightSide[i] - leftSide[i]); // Absolute difference
-                }
+                similaritySum = 0; // Reset the sum
 
                 console.log("Left side:", leftSide);
                 console.log("Right side:", rightSide);
-                console.log("Distance sum:", distanceSum);
 
-                resultDisplay(distanceSum); // Update the result display
+                // Count occurrences and calculate similarity sum
+                leftSide.forEach(num => {
+                    let count = rightSide.filter(rightNum => rightNum === num).length;
+                    similaritySum += num * count; // Multiply the number by its count and add to the sum
+                });
+
+                console.log("Similarity Sum:", similaritySum);
+
+                resultDisplay(similaritySum); // Update the result display
             }
         </script>
         <div id="resultDisplay">

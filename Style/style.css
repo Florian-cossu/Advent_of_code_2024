@@ -57,6 +57,16 @@ body {
     border-radius: var(--border-radius);
 }
 
+.homeLink {
+    text-decoration: underline;
+    color: var(--text-color);
+    transition: var(--animation-main);
+}
+
+.homeLink:hover {
+    color: var(--accent-color);
+}
+
 #input {
     background-color: var(--card-bg);
     border: solid .1rem transparent;
@@ -97,4 +107,27 @@ body {
 
 .updatedResult > p {
     margin: 0;
+}
+
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: var(--card-bg);
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--accent-color-lighter-more-transp);
+}
+
+.emoji {
+    font-size: 1.5rem;
 }
