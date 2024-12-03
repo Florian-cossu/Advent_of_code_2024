@@ -13,73 +13,141 @@
         <textarea id="input" placeholder="Enter your input here (e.g., '1 3\n6 2\n8 5')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            let safeReportsSum = 0;
-            
-            function strParse() {
-                safeReportsSum = 0; // Reset the sum
-                let inputSrc = document.getElementById('input').value;
-                dataArray = [];
+            function hasMoreThanTwoRepeatingDigits(arr) {
+                // Create a map to count the occurrences of each digit
+                const digitCounts = {};
 
-                // Split the input into lines
-                let strArr = inputSrc.split('\n');
-
-                // Parse each line into an array of numbers
-                let arrayOfArrays = strArr.map(line => 
-                    line.trim().split(/\s+/).map(num => parseInt(num, 10))
-                );
-
-                for (let line of arrayOfArrays) {
-                    let isIncreasing = false;
-                    let isDecreasing = false;
-                    let isValid = true;
-                    let originalLineLength = line.length;
-
-                    for (let i = 1; i < line.length; i++) {
-                        const diff = line[i] - line[i - 1];
-
-                        // Determine direction based on the first valid difference
-                        if (i === 1) {
-                            if (diff > 0) isIncreasing = true;
-                            else if (diff < 0) isDecreasing = true;
-                            else {
-                                isValid = false; // Same values are not allowed
-                                break;
-                            }
-                        }
-
-                        // Check for consistency and valid differences
-                        if ((isIncreasing && diff < 0) || (isDecreasing && diff > 0) && (originalLineLength - line.length >= 1)) {
-                            line.splice(i, 1);
-                            i = i -1;
-                        } else if ((isIncreasing && diff < 0) || (isDecreasing && diff > 0)) {
-                            isValid = false;
-                            break;
-                        } else if (isIncreasing && (diff < 1 || diff > 3) && (originalLineLength - line.length >= 1)) {
-                            isValid = false;
-                            break;
-                        } else if (isIncreasing && (diff < 1 || diff > 3)) {
-                            line.splice(i, 1);
-                            i = i -1;
-                        } else if (isDecreasing && (diff > -1 || diff < -3)  && (originalLineLength - line.length >= 1)) {
-                            isValid = false;
-                            break;
-                        } else if (isDecreasing && (diff > -1 || diff < -3)) {
-                            line.splice(i, 1);
-                            i = i -1;
-                        }
-                    }
-
-                    if (isValid) {
-                        safeReportsSum++;
-                        console.log("Safe:", line);
-                    } else {
-                        console.log("Unsafe:", line);
-                    }
+                // Count occurrences of each digit in the array
+                for (const num of arr) {
+                    digitCounts[num] = (digitCounts[num] || 0) + 1;
                 }
 
+                // Count how many distinct digits repeat
+                const repeatingDigitsCount = Object.values(digitCounts).filter(count => count > 1).length;
+                const repeatingMoreThanThrice = Object.values(digitCounts).filter(count => count > 3).length;
+
+                // Check if there are more than two repeating digits or if any digit repeats more than 3 times
+                return repeatingDigitsCount >= 2 || repeatingMoreThanThrice >= 1;
+            }
+
+            function strParse() {
+                safeReportsSum = 0; // Reset the sum
+                let faultyLines = 0;
+                let inputSrc = document.getElementById("input").value;
+            
+                // Split the input into lines
+                let strArr = inputSrc.split("\n");
+            
+                // Parse each line into an array of numbers
+                let arrayOfArrays = strArr.map((line) =>
+                    line.trim().split(/\s+/).map((num) => parseInt(num, 10))
+                );
+            
+
+                function lineValidator(line, average, retriedAlready = false) {
+                    let validated = true;
+            
+                    for (let i = 1; i < line.length; i++) {
+                        // Inital test with end of array
+                        let lastDiff = line[line.length - 1] - line[line.length - 2];
+                        const diff = line[i] - line[i - 1];
+
+                        if ((average > 0 && (diff <= 0 || diff > 3) && i == 1) || average < 0 && (diff >= 0 || diff < -3) && i == 1) {
+                            validated = false;
+                            if (!retriedAlready) {
+                                let modifiedLine = [...line];
+                                modifiedLine.splice(0, 1); // Remove the invalid element
+                                let validation = lineValidator(modifiedLine, average, true);
+                                if (!validation) {
+                                    console.log(`Line:\t${line}\nModified line:\t${modifiedLine}\nisValid at end:\t${validation}`);
+                                    faultyLines ++;
+                                }
+                                return validation;
+                            }
+                            break;
+                        } else if (average > 0 && lastDiff <= 0 || average < 0 && lastDiff >= 0) {
+                            validated = false;
+                            if (!retriedAlready) {
+                                let modifiedLine = [...line];
+                                modifiedLine.splice(line.length - 2, 1); // Remove the invalid element
+                                let validation = lineValidator(modifiedLine, average, true);
+                                if (!validation) {
+                                    console.log(`Line:\t${line}\nModified line:\t${modifiedLine}\nisValid at end:\t${validation}`);
+                                    faultyLines ++;
+                                }
+                                return validation;
+                            }
+                            break;
+                        }
+            
+                        // Check for consistency and valid differences
+                        if ((average > 0 && diff <= 0) || (average < 0 && diff >= 0)) {
+                            validated = false;
+                            if (!retriedAlready) {
+                                let modifiedLine = [...line];
+                                modifiedLine.splice(i, 1); // Remove the invalid element
+                                let validation = lineValidator(modifiedLine, average, true);
+                                if (!validation) {
+                                    console.log(`Line:\t${line}\nModified line:\t${modifiedLine}\nisValid at end:\t${validation}`)
+                                }
+                                return validation;
+                            }
+                            break;
+                        } else if (
+                            (average > 0 && (diff < 1 || diff > 3)) ||
+                            (average < 0 && (diff > -1 || diff < -3)) ||
+                            diff == 0
+                        ) {
+                            validated = false;
+                            if (!retriedAlready) {
+                                let modifiedLine = [...line];
+                                modifiedLine.splice(i, 1); // Remove the invalid element
+                                let validation = lineValidator(modifiedLine, average, true);
+                                if (!validation) {
+                                    console.log(`Line:\t${line}\nModified line:\t${modifiedLine}\nisValid at end:\t${validation}`)
+                                }
+                                return validation;
+                            }
+                            break;
+                        }
+                    }
+            
+                    return validated;
+                }
+            
+                for (let line of arrayOfArrays) {
+                    let isValidLine;
+                    let differences = line
+                        .map((num, i, arr) => {
+                            if (i < arr.length - 1) {
+                                return arr[i + 1] - num; // Calculate the difference with the next element
+                            } else {
+                                return null; // Handle the last element
+                            }
+                        })
+                        .filter((diff) => diff !== null); // Remove the `null` value for the last element
+            
+                    // Calculate the average of differences
+                    let average = differences.reduce((sum, val) => sum + val, 0) / differences.length;
+            
+                    // Validate the line
+                    if (!hasMoreThanTwoRepeatingDigits(line)) {
+                        isValidLine = lineValidator(line, average);
+                    } else {
+                        isValidLine = false;
+                    }
+            
+                    // Increment safe reports count
+                    if (isValidLine) {
+                        safeReportsSum++;
+                    }
+                }
+                
+                console.log(`Faulty Lines: ${faultyLines}`);
+            
                 resultDisplay(safeReportsSum); // Display the result
             }
-        </script>
+            </script>            
         <div id="resultDisplay">
             <!-- Result display -->
         </div>
