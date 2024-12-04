@@ -25,32 +25,12 @@ Since I am a Javascript noob I decided to try and do this challenge in JS to get
 
 I'm not a developper. I'm a linguist.
 
-## Current progress ![](https://geps.dev/progress/4)
+## Current progress ![](https://geps.dev/progress/12)
 
 |     Day     | Status | Comments |
 | :---------: | :----: | :------- |
 | [1](Day_01) |   ✅   |          |
-| [2](Day_02) |   ▶️   |          |
-|      3      |        |          |
-|      4      |        |          |
-|      5      |        |          |
-|      6      |        |          |
-|      7      |        |          |
-|      8      |        |          |
-|      9      |        |          |
-|     10      |        |          |
-|     11      |        |          |
-|     12      |        |          |
-|     13      |        |          |
-|     14      |        |          |
-|     15      |        |          |
-|     16      |        |          |
-|     17      |        |          |
-|     18      |        |          |
-|     19      |        |          |
-|     20      |        |          |
-|     21      |        |          |
-|     22      |        |          |
-|     23      |        |          |
-|     24      |        |          |
-|     25      |        |          |
+| [2](Day_02) |   ✅   |          |
+| [3](Day_03) |   ✅   |          |
+| [4](Day_04) |   ▶️   |          |
+

@@ -18,6 +18,7 @@ The unusual data (your puzzle input) consists of many **reports**, one report pe
 8 6 4 4 1
 1 3 6 7 9
 ```
+
 This example data contains six reports each containing five levels.
 
 The engineers are trying to figure out which reports are **safe**. The Red-Nosed reactor safety systems can only tolerate levels that are either gradually increasing or gradually decreasing. So, a report only counts as safe if both of the following are true:
