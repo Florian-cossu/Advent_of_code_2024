@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AoC - Day 5 part I</title>
+    <script src="../lib/js/resultDisplay.js"></script>
+    <link rel="stylesheet" href="../Style/style.css">
+</head>
+
+<body>
+    <div id="card">
+        <a href="../index.html" class="homeLink">→ Home</a>
+        <h1>Advent of Code - Day 5 part I</h1>
+        <textarea id="input" placeholder="Enter your input here"></textarea>
+        <button class="button" type="button" onclick="strParse()">Test</button>
+        <script>
+            function strParse() {
+                let result = 0;
+
+                const inputSrc = document.getElementById('input').value;
+                const strArr = inputSrc.split('\n');
+                const arrayOfLetters = strArr.map(line => line.trim().split(''));
+
+                resultDisplay(result); // Display the result
+            }
+        </script>
+        <div id="resultDisplay">
+            <!-- Result display -->
+        </div>
+    </div>
+</body>
+</html>
