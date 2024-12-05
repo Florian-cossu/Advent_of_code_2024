@@ -5,8 +5,6 @@
     --accent-color-transp: #03adf450;
     --accent-color-more-transp: #03adf420;
     --accent-color-lighter: #69d2ff;
-    --accent-color-lighter-transp: #69d2ff50;
-    --accent-color-lighter-more-transp: #69d2ff20;
     --animation-main: all .5s ease-in-out;
     --box-shadow: 0 0 .5rem #03adf47d;
 }
@@ -16,6 +14,8 @@
         --background: white;
         --text-color: black;
         --card-bg: #00000030;
+        --accent-color-lighter-transp: #4e8fab50;
+        --accent-color-lighter-more-transp: #1193cb20;
     }
 }
 
@@ -24,6 +24,8 @@
         --background: black;
         --text-color: white;
         --card-bg: #ffffff30;
+        --accent-color-lighter-transp: #69d2ff50;
+        --accent-color-lighter-more-transp: #69d2ff20;
     }
 }
 
@@ -81,7 +83,7 @@ body {
     border-radius: var(--light-border-radius);
 }
 
-.button {
+.button, .copyButton {
     background-color: var(--accent-color);
     border-radius: var(--light-border-radius);
     border: 0;
@@ -92,7 +94,7 @@ body {
     transition: var(--animation-main);
 }
 
-.button:hover {
+.button:hover, .copyButton:hover {
     background-color: var(--accent-color-lighter);
     box-shadow: var(--box-shadow);
 }
@@ -103,6 +105,10 @@ body {
     border-radius: var(--light-border-radius);
     padding: .5rem;
     border: solid .1rem var(--accent-color-lighter-transp);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .updatedResult > p {
