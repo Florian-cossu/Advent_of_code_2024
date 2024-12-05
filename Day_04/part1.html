@@ -13,53 +13,69 @@
         <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            let safeReportsSum = 0;
+            function matrixWordCheck (x, y, arr) {
+                let xmasOccurences = 0;
 
-            function strParse() {
-                safeReportsSum = 0; // Reset the sum
-                const inputSrc = document.getElementById('input').value;
-
-                // Split the input into lines
-                const strArr = inputSrc.split('\n');
-
-                // Parse each line into an array of numbers
-                const arrayOfArrays = strArr.map(line => 
-                    line.trim().split(/\s+/).map(num => parseInt(num, 10))
-                );
-
-                function isSafeReport(arr) {
-                    if (arr.length < 2) return true; // Single element or empty array is safe
-
-                    let isIncreasing = null; // Track direction (null initially)
-
-                    for (let i = 1; i < arr.length; i++) {
-                        const diff = arr[i] - arr[i - 1];
-
-                        if (diff < -3 || diff > 3 || diff === 0) {
-                            // Difference not within allowed range or no change
-                            return false;
-                        }
-
-                        // Determine direction
-                        if (isIncreasing === null) {
-                            isIncreasing = diff > 0; // First direction
-                        } else if ((isIncreasing && diff < 0) || (!isIncreasing && diff > 0)) {
-                            // Direction change detected
-                            return false;
-                        }
-                    }
-
-                    return true;
+                // Horizontal checks
+                // If X position permits, check along X to rightwards
+                if (x <= arr[y].length -4) {
+                    (arr[y][x+1] == "M" && arr[y][x+2] == "A" && arr[y][x+3] == "S") ? xmasOccurences++ : null;
                 }
 
-                // Count safe reports
-                arrayOfArrays.forEach(innerArray => {
-                    if (isSafeReport(innerArray)) {
-                        safeReportsSum++;
-                    }
-                });
+                // If X position permits, check along X to leftwards
+                if (x >= 3) {
+                    (arr[y][x-1] == "M" && arr[y][x-2] == "A" && arr[y][x-3] == "S") ? xmasOccurences++ : null;
+                }
 
-                resultDisplay(safeReportsSum); // Display the result
+                // Vertical checks
+                // If Y position permits, check along Y axis downwards
+                if (y <= arr.length - 4) {
+                    (arr[y+1][x] == "M" && arr[y+2][x] == "A" && arr[y+3][x] == "S") ? xmasOccurences++ : null;
+                }
+
+                // If Y position permits, check along Y axis upwards
+                if (y >= 3) {
+                    (arr[y-1][x] == "M" && arr[y-2][x] == "A" && arr[y-3][x] == "S") ? xmasOccurences++ : null;
+                }
+
+                // Diagonal checks
+                // If X,Y position permits, check along X rightwards and Y upwards
+                if (x <= arr[y].length -4 && y >= 3) {
+                    (arr[y-1][x+1] == "M" && arr[y-2][x+2] == "A" && arr[y-3][x+3] == "S") ? xmasOccurences++ : null;
+                }
+
+                // If X,Y position permits, check along X rightwards and Y downwards
+                if (x <= arr[y].length -4 && y <= arr.length - 4) {
+                    (arr[y+1][x+1] == "M" && arr[y+2][x+2] == "A" && arr[y+3][x+3] == "S") ? xmasOccurences++ : null;
+                }
+
+                // If X,Y position permits, check along X leftwards and Y upwards
+                if (x >= 3 && y >= 3) {
+                    (arr[y-1][x-1] == "M" && arr[y-2][x-2] == "A" && arr[y-3][x-3] == "S") ? xmasOccurences++ : null;
+                }
+
+                // If X,Y position permits, check along X leftwards and Y downwards
+                if (x >= 3 && y <= arr.length - 4) {
+                    (arr[y+1][x-1] == "M" && arr[y+2][x-2] == "A" && arr[y+3][x-3] == "S") ? xmasOccurences++ : null;
+                }
+                
+                return xmasOccurences;
+            }
+
+            function strParse() {
+                let xmasCount = 0;
+                const inputSrc = document.getElementById('input').value;
+
+                const strArr = inputSrc.split('\n');
+                const arrayOfLetters = strArr.map(line => line.trim().split(''));
+
+                for (let y = 0; y < arrayOfLetters.length; y++) {
+                    for (let x = 0; x < arrayOfLetters[y].length; x++) {
+                        xmasCount += (arrayOfLetters[y][x] == "X" ? matrixWordCheck(x, y, arrayOfLetters) : 0);
+                    }
+                }
+
+                resultDisplay(xmasCount); // Display the result
             }
         </script>
         <div id="resultDisplay">
