@@ -1,1 +1,6 @@
+# Ignore useless macOs files
 .DS_Store
+
+# Ignore puzzle inputs and instructions I save locally from the website and upload the pass protected zipfile instead
+/Day_[0-9][0-9]/puzzle.txt
+/Day_[0-9][0-9]/README.md
