@@ -14,69 +14,78 @@
         <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
+            function directionCheck (arr, dir, line, column) {
+                let lineCopy = line;
+                let columnCopy = column;
+                let movesCount = 0;
+
+                if (dir == "up") {
+                    do {
+                        lineCopy--
+                        movesCount++
+                    } while (arr[lineCopy][columnCopy] !== "#" && lineCopy > 0);
+
+                    dir = "right";
+
+                    return [dir, lineCopy, columnCopy, movesCount];
+                } else if (dir == "right") {
+                    do {
+                        columnCopy++
+                        movesCount++
+                    } while (arr[lineCopy][columnCopy] !== "#" && columnCopy < arr[lineCopy].length - 1);
+
+                    dir = "down";
+
+                    return [dir, lineCopy, columnCopy, movesCount];
+                } else if (dir == "down") {
+                    do {
+                        lineCopy++
+                        movesCount++
+                    } while (arr[lineCopy][columnCopy] !== "#" && lineCopy < arr.length - 1);
+
+                    dir = "left";
+
+                    return [dir, lineCopy, columnCopy, movesCount];
+                } else if (dir == "left") {
+                    do {
+                        columnCopy--
+                        movesCount++
+                    } while (arr[lineCopy][columnCopy] !== "#" && columnCopy > 0);
+
+                    dir = "up";
+
+                    return [dir, lineCopy, columnCopy, movesCount];
+                }
+            }
+
             function strParse() {
                 let result = 0;
+                let startPos = [];
+                let movingCoordinates = [];
+                let dir = "up"
 
                 const inputSrc = document.getElementById('input').value;
+
                 const strArr = inputSrc.split('\n');
+                const map = strArr.map(line => line.trim().split(''));
 
-                let pageOrderingRules = {};
-                let pagesToUpdate = [];
-
-                strArr.forEach(line => {
-                    if (line.match(/\|/)) {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
-
-                        // Ensure the key exists in the object
-                        if (!pageOrderingRules[key]) {
-                            pageOrderingRules[key] = [];
-                        }
-
-                        pageOrderingRules[key].push(right.trim());
-                    } else if (line.match(/,/)) {
-                        let pagesArray = line.split(/,/).map(page => page.trim());
-                        pagesToUpdate.push(pagesArray);
-                    }
-                });
-
-                for (let line = 0; line < pagesToUpdate.length; line++) {
-                    for (let page = 0; page < pagesToUpdate[line].length; page++) {
-                        for (let i = page + 1; i < pagesToUpdate[line].length; i++) {
-                        /*
-                            console.log(
-                                `Line: ${line}, page: ${pagesToUpdate[line][page]}, checking if ${pagesToUpdate[line][i]} is in ${pagesToUpdate[line][page]}'s array: ${pageOrderingRules[pagesToUpdate[line][page]]}`
-                            );
-                        */
-
-                            // Get the array from pageOrderingRules for the current page
-                            const ruleArray = pageOrderingRules[pagesToUpdate[line][page]] || [];
-
-                            if (!ruleArray.includes(pagesToUpdate[line][i])) {
-                                pagesToUpdate.splice(line, 1);
-                                line--; // Adjust index to account for removal
-                                break;
-                            }
+                for (let line = 0; line < map.length; line++) {
+                    for (let column = 0; column < map[line].length; column++) {
+                        if (map[line][column] == "^") {
+                            startPos = [line, column];
+                            movingCoordinates = [line, column];
+                            break;
                         }
                     }
                 }
 
-                
-                for (let line = 0; line < pagesToUpdate.length; line++) {
-                    const arr = pagesToUpdate[line];
-                    var middle = [...arr].reverse().reduce((c, v, i) => {
-                    if (v === arr[i]) c = v;
-                    return c;
-                    }, null);
+                console.log({start_y: startPos[0], start_x: startPos[1]});
 
-                    result += parseInt(middle, 10);
-                }
-            /*
-                console.log({
-                    page_ordering_rules: pageOrderingRules,
-                    pages_to_update: pagesToUpdate,
-                });
-            */
+                do {
+                    let moves = 0;
+                    [dir, movingCoordinates[0], movingCoordinates[1], moves] = directionCheck(map, dir, movingCoordinates[0], movingCoordinates[1]);
+                    result += moves;
+                } while ((movingCoordinates[0] >= 0 && movingCoordinates[0] <= map.length - 1) && (movingCoordinates[1] >= 0 && movingCoordinates[1] <= map[movingCoordinates[0]].length - 1));
 
                 resultDisplay(result); // Display the result
             }
