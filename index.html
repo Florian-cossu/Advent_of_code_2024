@@ -4,14 +4,29 @@
     <title>AoC 2024</title>
     <link rel="stylesheet" href="Style/style.css">
     <style>
-        table > tbody > tr > td > a {
+        h1 {
+            margin-bottom: 0;
+            text-decoration: underline wavy var(--accent-color);
+        }
+
+        table > tbody > tr > td > a, p > a {
             text-decoration: underline;
             color: var(--text-color);
             transition: var(--animation-main);
         }
 
-        table > tbody > tr > td > a:hover {
+        p > a {
+            color: var(--accent-color-lighter);
+        }
+
+        table > tbody > tr > td > a:hover, p > a:hover {
             color: var(--accent-color);
+        }
+
+        #toolLink {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
@@ -19,6 +34,11 @@
 <body>
     <div id="card">
         <h1>Advent of Code 2024</h1>
+
+        <div id="toolLink">
+            <p>Check script results here: <a href="https://aoc.fornwall.net/">→ Advent of code solver</a>.</p>
+        </div>
+
         <table>
             <thead>
                 <tr>
