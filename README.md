@@ -25,7 +25,7 @@ Since I am a Javascript noob I decided to try and do this challenge in JS to get
 
 I'm not a developper. I'm a linguist.
 
-## Current progress ![](https://geps.dev/progress/16)
+## Current progress ![](https://geps.dev/progress/18)
 
 |     Day     | Status | Comments |
 | :---------: | :----: | :------- |

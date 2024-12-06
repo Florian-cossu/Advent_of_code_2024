@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>AoC - Day 5 part I</title>
+    <title>AoC - Day 5 part II</title>
     <script src="../lib/js/resultDisplay.js"></script>
     <link rel="stylesheet" href="../Style/style.css">
 </head>
@@ -9,8 +9,9 @@
 <body>
     <div id="card">
         <a href="../index.html" class="homeLink">→ Home</a>
-        <h1>Advent of Code - Day 5 part I</h1>
-        <textarea id="input" placeholder="Enter your input here"></textarea>
+        <a href="part1.html" class="homeLink">→ Part I</a>
+        <h1>Advent of Code - Day 5 part II</h1>
+        <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
             function strParse() {
@@ -18,7 +19,67 @@
 
                 const inputSrc = document.getElementById('input').value;
                 const strArr = inputSrc.split('\n');
-                const arrayOfLetters = strArr.map(line => line.trim().split(''));
+
+                let pageOrderingRules = {};
+                let pagesToUpdate = [];
+                let pagesToReorder = [];
+
+                strArr.forEach(line => {
+                    if (line.match(/\|/)) {
+                        let [left, right] = line.split(/\|/);
+                        let key = left.trim();
+
+                        // Ensure the key exists in the object
+                        if (!pageOrderingRules[key]) {
+                            pageOrderingRules[key] = [];
+                        }
+
+                        pageOrderingRules[key].push(right.trim());
+                    } else if (line.match(/,/)) {
+                        let pagesArray = line.split(/,/).map(page => page.trim());
+                        pagesToUpdate.push(pagesArray);
+                    }
+                });
+
+                for (let line = 0; line < pagesToUpdate.length; line++) {
+                    for (let page = 0; page < pagesToUpdate[line].length; page++) {
+                        for (let i = page + 1; i < pagesToUpdate[line].length; i++) {
+                        /*
+                            console.log(
+                                `Line: ${line}, page: ${pagesToUpdate[line][page]}, checking if ${pagesToUpdate[line][i]} is in ${pagesToUpdate[line][page]}'s array: ${pageOrderingRules[pagesToUpdate[line][page]]}`
+                            );
+                        */
+
+                            // Get the array from pageOrderingRules for the current page
+                            const ruleArray = pageOrderingRules[pagesToUpdate[line][page]] || [];
+
+                            if (!ruleArray.includes(pagesToUpdate[line][i])) {
+                                pagesToReorder.push(pagesToUpdate[line]);
+                                pagesToUpdate.splice(line, 1);
+                                line--; // Adjust index to account for removal
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                
+                for (let line = 0; line < pagesToUpdate.length; line++) {
+                    const arr = pagesToUpdate[line];
+                    var middle = [...arr].reverse().reduce((c, v, i) => {
+                    if (v === arr[i]) c = v;
+                    return c;
+                    }, null);
+
+                    result += parseInt(middle, 10);
+                }
+            
+                console.log({
+                    page_ordering_rules: pageOrderingRules,
+                    pages_to_update: pagesToUpdate,
+                    pages_to_reorder: pagesToReorder
+                });
+            
 
                 resultDisplay(result); // Display the result
             }
