@@ -25,7 +25,7 @@ Since I am a Javascript noob I decided to try and do this challenge in JS to get
 
 I'm not a developper. I'm a linguist.
 
-## Current progress ![](https://geps.dev/progress/18)
+## Current progress ![](https://geps.dev/progress/20)
 
 |     Day     | Status | Comments |
 | :---------: | :----: | :------- |
@@ -33,4 +33,5 @@ I'm not a developper. I'm a linguist.
 | [2](Day_02) |   ✅   |          |
 | [3](Day_03) |   ✅   |          |
 | [4](Day_04) |   ✅   |          |
-| [5](Day_05) |   ⏳   |          |
+| [5](Day_05) |   ✅   |          |
+| [6](Day_06) |   ⏳   |          |

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>✅ AoC - Day 5 part II</title>
+    <title>AoC - Day 6 part I</title>
     <script src="../lib/js/resultDisplay.js"></script>
     <link rel="stylesheet" href="../Style/style.css">
 </head>
@@ -9,8 +9,8 @@
 <body>
     <div id="card">
         <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part1.html" class="homeLink">→ Part I</a>
-        <h1>✅ Advent of Code - Day 5 part II</h1>
+        <a href="part2.html" class="homeLink">→ Part II</a>
+        <h1>Advent of Code - Day 6 part I</h1>
         <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
@@ -22,7 +22,6 @@
 
                 let pageOrderingRules = {};
                 let pagesToUpdate = [];
-                let pagesToReorder = [];
 
                 strArr.forEach(line => {
                     if (line.match(/\|/)) {
@@ -54,7 +53,6 @@
                             const ruleArray = pageOrderingRules[pagesToUpdate[line][page]] || [];
 
                             if (!ruleArray.includes(pagesToUpdate[line][i])) {
-                                pagesToReorder.push(pagesToUpdate[line]);
                                 pagesToUpdate.splice(line, 1);
                                 line--; // Adjust index to account for removal
                                 break;
@@ -63,23 +61,9 @@
                     }
                 }
 
-                for (let line = 0; line < pagesToReorder.length; line++) {
-                    let reorderedLine = [];
-
-                    for (let page = 0; page < pagesToReorder[line].length; page++) {
-                        for (let i = page + 1; i < pagesToReorder[line].length; i++) {
-                            // Get the array from pageOrderingRules for the current page
-                            const ruleArray = pageOrderingRules[pagesToReorder[line][page]] || [];
-
-                            if (!ruleArray.includes(pagesToReorder[line][i])) {
-                                [pagesToReorder[line][page], pagesToReorder[line][i]] = [pagesToReorder[line][i], pagesToReorder[line][page]];
-                            }
-                        }
-                    }
-                }
-
-                for (let line = 0; line < pagesToReorder.length; line++) {
-                    const arr = pagesToReorder[line];
+                
+                for (let line = 0; line < pagesToUpdate.length; line++) {
+                    const arr = pagesToUpdate[line];
                     var middle = [...arr].reverse().reduce((c, v, i) => {
                     if (v === arr[i]) c = v;
                     return c;
@@ -87,12 +71,10 @@
 
                     result += parseInt(middle, 10);
                 }
-            
             /*
                 console.log({
                     page_ordering_rules: pageOrderingRules,
                     pages_to_update: pagesToUpdate,
-                    pages_to_reorder: pagesToReorder
                 });
             */
 
