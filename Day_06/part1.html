@@ -18,60 +18,44 @@
             let directionCheckExec = 0;
 
             function directionCheck(arr, dir, line, column) {
-
                 directionCheckExec++;
                 let lineCopy = line;
                 let columnCopy = column;
                 let movesCount = 0;
 
-                // Check in the respective direction
                 if (dir === "up") {
-                    for (let i = lineCopy - 1; i > 0; i--) { // Moving up, so we start from one position above
-                        console.log("Move: " + (movesCount + 1) + " - Checking y: " + i + " x: " + columnCopy + " contents: " + arr[i][columnCopy]);
-                        if (arr[i][columnCopy] === "#") {
-                            lineCopy = i;  // Update line
-                            movesCount++;
-                            break;
-                        }
-                        movesCount++;
+                    while (lineCopy > 0 && arr[lineCopy - 1][columnCopy] !== "#") {
+                        lineCopy--;
+                        
+                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
+                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
                     }
-                    dir = "right";  // Next direction is right
+                    dir = "right";
                 } else if (dir === "right") {
-                    for (let i = columnCopy + 1; i < arr[lineCopy].length; i++) { // Moving right, so we start from the next position
-                        console.log("Move: " + (movesCount + 1) + " - Checking y: " + lineCopy + " x: " + i + " contents: " + arr[lineCopy][i]);
-                        if (arr[lineCopy][i] === "#") {
-                            columnCopy = i;  // Update column
-                            movesCount++;
-                            break;
-                        }
-                        movesCount++;
+                    while (columnCopy < arr[lineCopy].length - 1 && arr[lineCopy][columnCopy + 1] !== "#") {
+                        columnCopy++;
+                        
+                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
+                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
                     }
-                    dir = "down";   // Next direction is down
+                    dir = "down";
                 } else if (dir === "down") {
-                    for (let i = lineCopy + 1; i < arr.length; i++) { // Moving down, so we start from the next position
-                        console.log("Move: " + (movesCount + 1) + " - Checking y: " + i + " x: " + columnCopy + " contents: " + arr[i][columnCopy]);
-                        if (arr[i][columnCopy] === "#") {
-                            lineCopy = i;  // Update line
-                            movesCount++;
-                            break;
-                        }
-                        movesCount++;
+                    while (lineCopy < arr.length - 1 && arr[lineCopy + 1][columnCopy] !== "#") {
+                        lineCopy++;
+                        
+                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
+                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
                     }
-                    dir = "left";   // Next direction is left
+                    dir = "left";
                 } else if (dir === "left") {
-                    for (let i = columnCopy - 1; i > 0; i--) { // Moving left, so we start from one position before
-                        console.log("Move: " + (movesCount + 1) + " - Checking y: " + lineCopy + " x: " + i + " contents: " + arr[lineCopy][i]);
-                        if (arr[lineCopy][i] === "#") {
-                            columnCopy = i;  // Update column
-                            movesCount++;
-                            break;
-                        }
-                        movesCount++;
+                    while (columnCopy > 0 && arr[lineCopy][columnCopy - 1] !== "#") {
+                        columnCopy--;
+                        
+                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
+                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
                     }
-                    dir = "up";     // Next direction is up
+                    dir = "up";
                 }
-
-                console.log("Return:", { direction: dir, newPosition: [lineCopy, columnCopy], movesCount: movesCount });
 
                 return [dir, lineCopy, columnCopy, movesCount];
             }
@@ -112,21 +96,18 @@
 
                 console.log({ start_y: startPos[0], start_x: startPos[1], map_heigt: map.length, map_width: map[0].length });
 
+                // Main logic
                 do {
                     let moves = 0;
-                    let startY = movingCoordinates[0];
-                    let startX = movingCoordinates[1];
-
-                    console.log("Execution number: " + (directionCheckExec + 1) + " will begin " + dir + "wards.");
+                    let [y, x] = [movingCoordinates[0], movingCoordinates[1]];
 
                     [dir, movingCoordinates[0], movingCoordinates[1], moves] = directionCheck(
                         map,
                         dir,
-                        startY,
-                        startX
+                        y,
+                        x
                     );
 
-                    // Ensure the number of moves is valid
                     if (moves === 0) {
                         console.warn("No further moves possible. Terminating.");
                         break;
@@ -140,10 +121,10 @@
                     movingCoordinates[1] < map[0].length
                 );
 
-                console.log({ result, expected_result: 4883, delta: Math.abs(result - 4883), direction_check_count: directionCheckExec });
+                result != 4883 ? console.log({result: result, expected_result: 4883, delta: Math.abs(result - 4883), direction_check_count: directionCheckExec, result_minus_check_execs: result - directionCheckExec}) : null;
+                console.log(map)
                 resultDisplay(result); // Display the result
             }
-
         </script>
         <div id="resultDisplay">
             <!-- Result display -->
