@@ -17,9 +17,37 @@
         <script>
             let safeReportsSum = 0;
 
-            function strParse() {
+            async function strParse() {
                 safeReportsSum = 0; // Reset the sum
                 const inputSrc = document.getElementById('input').value;
+                
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/2/1";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
 
                 // Split the input into lines
                 const strArr = inputSrc.split('\n');
@@ -61,7 +89,11 @@
                     }
                 });
 
-                resultDisplay(safeReportsSum); // Display the result
+                if (safeReportsSum != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + safeReportsSum + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(safeReportsSum);
+                }
             }
         </script>
         <div id="resultDisplay">

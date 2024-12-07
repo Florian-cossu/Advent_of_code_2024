@@ -60,7 +60,7 @@
                 return [dir, lineCopy, columnCopy, movesCount];
             }
 
-            function strParse() {
+            async function strParse() {
                 directionCheckExec = 0;
                 let result = 0;
                 let startPos = [0, 0];
@@ -68,6 +68,35 @@
                 let dir = "up";
 
                 const inputSrc = document.getElementById("input").value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/6/1";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
+
                 const strArr = inputSrc.split("\n");
                 const map = strArr.filter(line => line.trim() !== "").map(line => line.trim().split(""));
 
@@ -121,9 +150,18 @@
                     movingCoordinates[1] < map[0].length
                 );
 
-                result != 4883 ? console.log({result: result, expected_result: 4883, delta: Math.abs(result - 4883), direction_check_count: directionCheckExec, result_minus_check_execs: result - directionCheckExec}) : null;
                 console.log(map)
-                resultDisplay(result); // Display the result
+                
+                if (result != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
+                        result: result,
+                        expected_result: expectedAnswer,
+                        delta: Math.abs(result - expectedAnswer),
+                        direction_check_count: directionCheckExec,
+                        result_minus_check_execs: result - directionCheckExec}, null, 2));
+                } else {
+                    resultDisplay(result);
+                }
             }
         </script>
         <div id="resultDisplay">

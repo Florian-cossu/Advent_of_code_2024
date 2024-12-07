@@ -64,9 +64,37 @@
                 return xmasOccurences;
             }
 
-            function strParse() {
+            async function strParse() {
                 let xmasCount = 0;
                 const inputSrc = document.getElementById('input').value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/4/1";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
 
                 const strArr = inputSrc.split('\n');
                 const arrayOfLetters = strArr.map(line => line.trim().split(''));
@@ -77,7 +105,11 @@
                     }
                 }
 
-                resultDisplay(xmasCount); // Display the result
+                if (xmasCount != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + xmasCount + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(xmasCount);
+                }
             }
         </script>
         <div id="resultDisplay">

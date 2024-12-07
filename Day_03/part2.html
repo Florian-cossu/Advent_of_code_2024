@@ -14,12 +14,40 @@
         <textarea id="input" placeholder="Enter your input here (e.g., 'do()mul(3,4)\ndon't()mul(2,5)')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            function strParse() {
+            async function strParse() {
                 // Reset global variables
                 let filteredInput = "";
                 let sumOfMul = 0;
 
                 const inputSrc =  "do()" + document.getElementById('input').value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/3/2";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
 
                 // Match lines starting with "do()" or "don't()"
                 // Split input by "do()" and "don't()", filtering out empty elements
@@ -55,7 +83,11 @@
                     });
                 }
 
-                resultDisplay(sumOfMul); // Display the result
+                if (sumOfMul != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + sumOfMul + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(sumOfMul);
+                }
             }
         </script>
         <div id="resultDisplay">

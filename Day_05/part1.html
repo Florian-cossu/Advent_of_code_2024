@@ -15,10 +15,39 @@
         <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            function strParse() {
+            async function strParse() {
                 let result = 0;
 
                 const inputSrc = document.getElementById('input').value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/5/1";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
+
                 const strArr = inputSrc.split('\n');
 
                 let pageOrderingRules = {};
@@ -78,8 +107,12 @@
                     pages_to_update: pagesToUpdate,
                 });
             */
-
-                resultDisplay(result); // Display the result
+                
+                if (result != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(result);
+                }
             }
         </script>
         <div id="resultDisplay">

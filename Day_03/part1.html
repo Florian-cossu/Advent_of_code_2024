@@ -18,8 +18,36 @@
             let multOccurences = [];
             let sumOfMul = 0;
 
-            function strParse() {
+                async function strParse() {
                 const inputSrc = document.getElementById('input').value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/3/1";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
 
                 multOccurences = inputSrc.match(/mul\(\d{1,3}\,\d{1,3}\)/g);
 
@@ -33,7 +61,11 @@
                     sumOfMul += multiplication;
                 });
 
-                resultDisplay(sumOfMul); // Display the result
+                if (sumOfMul != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + sumOfMul + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(sumOfMul);
+                }
             }
         </script>
         <div id="resultDisplay">

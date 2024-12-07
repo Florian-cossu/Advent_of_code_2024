@@ -17,8 +17,36 @@
         <script>
             let distanceSum = 0;
             
-            function strParse() {
-                let inputSrc = document.getElementById('input').value;
+            async function strParse() {
+                const inputSrc = document.getElementById('input').value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/1/1";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
 
                 // Split the input into lines
                 let strArr = inputSrc.split('\n');
@@ -45,11 +73,14 @@
                     distanceSum += Math.abs(rightSide[i] - leftSide[i]); // Absolute difference
                 }
 
-                console.log("Left side:", leftSide);
-                console.log("Right side:", rightSide);
-                console.log("Distance sum:", distanceSum);
-
-                resultDisplay(distanceSum); // Update the result display
+                if (distanceSum != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + distanceSum + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
+                        Left_side: leftSide,
+                        Right_side: rightSide,
+                        Distance_sum: distanceSum}, null, 2));
+                } else {
+                    resultDisplay(distanceSum);
+                }
             }
         </script>
         <div id="resultDisplay">

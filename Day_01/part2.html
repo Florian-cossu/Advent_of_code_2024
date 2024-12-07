@@ -17,8 +17,36 @@
         <script>
             let similaritySum = 0;
 
-            function strParse() {
-                let inputSrc = document.getElementById('input').value;
+            async function strParse() {
+                const inputSrc = document.getElementById('input').value;
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/1/2";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = inputSrc;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
 
                 // Split the input into lines
                 let strArr = inputSrc.split('\n');
@@ -50,9 +78,11 @@
                     similaritySum += num * count; // Multiply the number by its count and add to the sum
                 });
 
-                console.log("Similarity Sum:", similaritySum);
-
-                resultDisplay(similaritySum); // Update the result display
+                if (similaritySum != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + similaritySum + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(similaritySum);
+                }
             }
         </script>
         <div id="resultDisplay">

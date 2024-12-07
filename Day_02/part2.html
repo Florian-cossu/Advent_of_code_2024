@@ -38,8 +38,37 @@
                 return false;
             }
 
-            function strParse() {
+            async function strParse() {
                 const input = document.getElementById("input").value.trim();
+
+                const expectedResult = async () => {
+                    const url = "https://advent.fly.dev/solve/2024/2/2";
+                    const headers = {
+                        "Accept": "text/plain",
+                        "Content-Type": "text/plain"
+                    };
+                    const data = input;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: data
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error("Error:", error.message);
+                        return null;
+                    }
+                };
+
+                const expectedAnswer =  await expectedResult();
+
                 const reports = input
                     .split("\n")
                     .map((line) => line.trim().split(/\s+/).map(Number));
@@ -51,8 +80,11 @@
                     }
                 });
 
-                console.log(`Safe Reports: ${safeReportsCount}`);
-                resultDisplay(safeReportsCount); // Display the result
+                if (safeReportsCount != expectedAnswer) {
+                    resultDisplay("Your result is incorrect (" + safeReportsSum + "). The correct answer was " + expectedAnswer);
+                } else {
+                    resultDisplay(safeReportsCount);
+                }
             }
             </script>            
         <div id="resultDisplay">
