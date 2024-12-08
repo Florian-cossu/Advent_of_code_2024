@@ -23,11 +23,13 @@
                 // Parse and validate input
                 const strArr = inputSrc.split("\n");
 
-                strArr.forEach(line => {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
-
-                        pageOrderingRules[key].push(right.trim());
+                const calibrationData = strArr.forEach(line => {
+                        let [left, right] = line.split(/:/);
+                        let key = parseInt(left.trim(),10);
+                        let array = right.split(/\s/)
+                        array.forEach(number => {
+                            parseInt(number.trim());
+                        });
                 });
 
                 const expectedResult = async () => {
@@ -36,6 +38,7 @@
                         "Accept": "text/plain",
                         "Content-Type": "text/plain"
                     };
+                    
                     const data = inputSrc;
 
                     try {
@@ -61,12 +64,7 @@
                 // CODE HERE
 
                 if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
-                        result: result,
-                        expected_result: expectedAnswer,
-                        delta: Math.abs(result - expectedAnswer),
-                        direction_check_count: directionCheckExec,
-                        result_minus_check_execs: result - directionCheckExec}, null, 2));
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + ;
                 } else {
                     resultDisplay(result);
                 }
