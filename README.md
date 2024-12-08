@@ -35,3 +35,5 @@ I'm not a developper. I'm a linguist.
 | [4](Day_04) |   ✅   |          |
 | [5](Day_05) |   ✅   |          |
 | [6](Day_06) |   ⏳   |          |
+| [7](Day_07) |   ⏳   |          |
+| [8](Day_08) |   ⏳   |          |
