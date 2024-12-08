@@ -19,55 +19,79 @@
 
             function directionCheck(arr, dir, line, column) {
                 directionCheckExec++;
-                let lineCopy = line;
-                let columnCopy = column;
                 let movesCount = 0;
 
                 if (dir === "up") {
-                    while (lineCopy > 0 && arr[lineCopy - 1][columnCopy] !== "#") {
-                        lineCopy--;
-                        
-                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
-                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
+                    while (line >= 0) {
+                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (line == 0 || arr[line - 1][column] && arr[line-1][column] === "#") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                            break;
+                        } else if (arr[line][column] !== "X") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                        }
+                        line--;
                     }
                     dir = "right";
                 } else if (dir === "right") {
-                    while (columnCopy < arr[lineCopy].length - 1 && arr[lineCopy][columnCopy + 1] !== "#") {
-                        columnCopy++;
-                        
-                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
-                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
+                    while (column <= arr[line].length - 1) {
+                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (column == arr[line].length - 1 || arr[line][column+1] && arr[line][column+1] === "#") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                            break;
+                        } else if (arr[line][column] !== "X") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                        }
+                        column++;
                     }
                     dir = "down";
                 } else if (dir === "down") {
-                    while (lineCopy < arr.length - 1 && arr[lineCopy + 1][columnCopy] !== "#") {
-                        lineCopy++;
-                        
-                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
-                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
+                    while (line <= arr.length - 1) {
+                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (line == arr.length - 1 || arr[line+1][column] && arr[line+1][column] === "#") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                            break;
+                        } else if (arr[line][column] !== "X") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                        }
+                        line++;
                     }
                     dir = "left";
                 } else if (dir === "left") {
-                    while (columnCopy > 0 && arr[lineCopy][columnCopy - 1] !== "#") {
-                        columnCopy--;
-                        
-                        arr[lineCopy][columnCopy] !== "X" ? movesCount++ : null;
-                        arr[lineCopy][columnCopy] !== "X" ? arr[lineCopy][columnCopy] = "X" : null;
+                    while (column >= 0) {
+                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (column == 0 || arr[line][column-1] && arr[line][column-1] === "#") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                            break;
+                        } else if (arr[line][column] !== "X") {
+                            arr[line][column] = "X";
+                            movesCount++;
+                        }
+                        column--;
                     }
                     dir = "up";
                 }
 
-                return [dir, lineCopy, columnCopy, movesCount];
+                return [dir, line, column, movesCount];
             }
 
             async function strParse() {
-                directionCheckExec = 0;
                 let result = 0;
                 let startPos = [0, 0];
                 let movingCoordinates = [0, 0];
                 let dir = "up";
 
                 const inputSrc = document.getElementById("input").value;
+
+                // Parse and validate input
+                const strArr = inputSrc.split("\n");
 
                 const expectedResult = async () => {
                     const url = "https://advent.fly.dev/solve/2024/6/1";
@@ -97,7 +121,6 @@
 
                 const expectedAnswer =  await expectedResult();
 
-                const strArr = inputSrc.split("\n");
                 const map = strArr.filter(line => line.trim() !== "").map(line => line.trim().split(""));
 
                 if (map.length === 0) {
@@ -123,7 +146,7 @@
                     return;
                 }
 
-                console.log({ start_y: startPos[0], start_x: startPos[1], map_heigt: map.length, map_width: map[0].length });
+                console.log({ start_y: startPos[0], start_x: startPos[1], map });
 
                 // Main logic
                 do {
@@ -140,6 +163,9 @@
                     if (moves === 0) {
                         console.warn("No further moves possible. Terminating.");
                         break;
+                    } else if (movingCoordinates[0] == 0 || movingCoordinates[1] == 0 || movingCoordinates[0] == map.length - 1 || movingCoordinates[1] == map[movingCoordinates[0]].length - 1) {
+                        result += moves;
+                        break;
                     } else {
                         result += moves;
                     }
@@ -150,8 +176,6 @@
                     movingCoordinates[1] < map[0].length
                 );
 
-                console.log(map)
-                
                 if (result != expectedAnswer) {
                     resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
                         result: result,
@@ -162,6 +186,8 @@
                 } else {
                     resultDisplay(result);
                 }
+
+                map.length <= 10 && [0].length <= 10 ? console.log(map) : null;
             }
         </script>
         <div id="resultDisplay">
