@@ -15,18 +15,76 @@
         <textarea id="input" placeholder="Enter your input here..."></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
+            function generateExpressions(arr, index = 0, currentExpression = "") {
+                if (index === arr.length - 1) {
+                    // Base case: we've reached the last number, return the current expression
+                    return [currentExpression + arr[index]];
+                }
+
+                // Recursive case: add the current number with '+', '*' or '||', and explore further
+                const withAddition = generateExpressions(
+                    arr,
+                    index + 1,
+                    currentExpression + arr[index] + " + "
+                );
+                const withMultiplication = generateExpressions(
+                    arr,
+                    index + 1,
+                    currentExpression + arr[index] + " * "
+                );
+                const withConcatenation = generateExpressions(
+                    arr,
+                    index + 1,
+                    currentExpression + arr[index] + " || "
+                );
+
+                // Combine all possibilities
+                return [...withAddition, ...withMultiplication, ...withConcatenation];
+            }
+
+            function evaluateExpressions(expressions) {
+                return expressions.map(expr => {
+                    // Step 1: Handle concatenation by removing `||` and combining adjacent numbers
+                    let string = expr.replace(/\s\|\|\s/g, ""); // Remove '||' and combine numbers
+                    const tokens = string.split(/\s+/); // Split into tokens based on spaces
+
+                    // Step 2: Evaluate the expression left-to-right
+                    let result = parseInt(tokens[0], 10); // Initialize with the first number
+
+                    for (let i = 1; i < tokens.length; i += 2) {
+                        const operator = tokens[i];
+                        const nextNumber = parseInt(tokens[i + 1], 10);
+
+                        if (operator === "+") {
+                            result += nextNumber;
+                        } else if (operator === "*") {
+                            result *= nextNumber;
+                        } else {
+                            console.error(`Unknown operator: ${operator}`);
+                            return null; // Handle unexpected cases gracefully
+                        }
+                    }
+
+                    return { expression: expr, result }; // Return the original expression and its evaluated result
+                });
+            }
+
             async function strParse() {
                 let result = 0;
 
-                const inputSrc = document.getElementById('input').value;
-                const strArr = inputSrc.split('\n');
+                const inputSrc = document.getElementById("input").value;
 
-                strArr.forEach(line => {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
+                // Parse and validate input
+                const strArr = inputSrc.split("\n");
 
-                        pageOrderingRules[key].push(right.trim());
+                const calibrationData = strArr.map(line => {
+                    let [left, right] = line.split(/:/);
+                    let key = parseInt(left.trim(), 10);
+                    let array = right.trim().split(/\s/).map(number => parseInt(number.trim(), 10));
+                    return { key, array };
                 });
+
+                // console.log(calibrationData);
 
                 const expectedResult = async () => {
                     const url = "https://advent.fly.dev/solve/2024/7/2";
@@ -34,6 +92,7 @@
                         "Accept": "text/plain",
                         "Content-Type": "text/plain"
                     };
+                    
                     const data = inputSrc;
 
                     try {
@@ -55,16 +114,33 @@
                 };
 
                 const expectedAnswer =  await expectedResult();
-                
-                // CODE HERE
+
+                for (let item of calibrationData) {
+                    const { key, array } = item;
+
+                    // Generate and evaluate all possible expressions
+                    const expressions = generateExpressions(array);
+                    const evaluated = evaluateExpressions(expressions);
+
+                    console.log({
+                        key: key,
+                        values: array,
+                        exp: expressions,
+                        calculations: evaluated,
+                        has_match: evaluated.some(({ result }) => result === key)
+                    })
+
+                    // Check if the key matches any evaluated result
+                    const matchesKey = evaluated.some(({ result }) => result === key);
+
+                    // Update result if there's a match
+                    if (matchesKey) {
+                        result += key;
+                    }
+                }
 
                 if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
-                        result: result,
-                        expected_result: expectedAnswer,
-                        delta: Math.abs(result - expectedAnswer),
-                        direction_check_count: directionCheckExec,
-                        result_minus_check_execs: result - directionCheckExec}, null, 2));
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer);
                 } else {
                     resultDisplay(result);
                 }

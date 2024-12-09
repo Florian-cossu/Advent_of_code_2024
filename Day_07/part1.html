@@ -15,6 +15,51 @@
         <textarea id="input" placeholder="Enter your input here..."></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
+            function generateExpressions(arr, index = 0, currentExpression = "") {
+                if (index === arr.length - 1) {
+                    // Base case: we've reached the last number, return the current expression
+                    return [currentExpression + arr[index]];
+                }
+
+                // Recursive case: add the current number with '+' or '*', and explore further
+                const withAddition = generateExpressions(
+                    arr,
+                    index + 1,
+                    currentExpression + arr[index] + " + "
+                );
+                const withMultiplication = generateExpressions(
+                    arr,
+                    index + 1,
+                    currentExpression + arr[index] + " * "
+                );
+
+                // Combine all possibilities
+                return [...withAddition, ...withMultiplication];
+            }
+
+            function evaluateExpressions(expressions) {
+                return expressions.map(expr => {
+                    const tokens = expr.split(/\s+/); // Split by spaces to get numbers and operators
+                    let result = parseInt(tokens[0], 10); // Initialize with the first number
+
+                    for (let i = 1; i < tokens.length; i += 2) {
+                        const operator = tokens[i];
+                        const nextNumber = parseInt(tokens[i + 1], 10);
+
+                        if (operator === "+") {
+                            result += nextNumber;
+                        } else if (operator === "*") {
+                            result *= nextNumber;
+                        } else {
+                            console.error(`Unknown operator: ${operator}`);
+                            return null; // Handle unexpected cases gracefully
+                        }
+                    }
+
+                    return { expression: expr, result }; // Return the expression and its evaluated result
+                });
+            }
+
             async function strParse() {
                 let result = 0;
 
@@ -23,14 +68,14 @@
                 // Parse and validate input
                 const strArr = inputSrc.split("\n");
 
-                const calibrationData = strArr.forEach(line => {
-                        let [left, right] = line.split(/:/);
-                        let key = parseInt(left.trim(),10);
-                        let array = right.split(/\s/)
-                        array.forEach(number => {
-                            parseInt(number.trim());
-                        });
+                const calibrationData = strArr.map(line => {
+                    let [left, right] = line.split(/:/);
+                    let key = parseInt(left.trim(), 10);
+                    let array = right.trim().split(/\s/).map(number => parseInt(number.trim(), 10));
+                    return { key, array };
                 });
+
+                // console.log(calibrationData);
 
                 const expectedResult = async () => {
                     const url = "https://advent.fly.dev/solve/2024/7/1";
@@ -61,10 +106,32 @@
 
                 const expectedAnswer =  await expectedResult();
 
-                // CODE HERE
+                for (let item of calibrationData) {
+                    const { key, array } = item;
+
+                    // Generate and evaluate all possible expressions
+                    const expressions = generateExpressions(array);
+                    const evaluated = evaluateExpressions(expressions);
+
+                    console.log({
+                        key: key,
+                        values: array,
+                        exp: expressions,
+                        calculations: evaluated,
+                        has_match: evaluated.some(({ result }) => result === key)
+                    })
+
+                    // Check if the key matches any evaluated result
+                    const matchesKey = evaluated.some(({ result }) => result === key);
+
+                    // Update result if there's a match
+                    if (matchesKey) {
+                        result += key;
+                    }
+                }
 
                 if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + ;
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer);
                 } else {
                     resultDisplay(result);
                 }
