@@ -74,7 +74,7 @@
 
             percentage = Math.round(((count*2)/50)*100);
 
-            return percentage;
+            return percentage + "%";
         }
     </script>
 </head>
@@ -150,12 +150,16 @@
             </tbody>
         </table>
         <script>
-            let count = countCompletedTasks();
-            let progressValue = document.querySelector("#progressBar > p");
-            let progressBar = document.querySelector("#progressBar");
+            window.onload = function() {
+                let count = countCompletedTasks();
+                let progressValue = document.querySelector("#progressBar > p");
+                let progressBar = document.querySelector("#progressBar");
 
-            progressValue.innerText = count;
-            progressBar.style.width = count;
+                progressValue.innerText = count;
+                progressBar.style.width = count;
+
+                console.log(count)
+            };
         </script>
     </div>
 </body>
