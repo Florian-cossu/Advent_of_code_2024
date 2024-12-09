@@ -23,8 +23,10 @@
 
                 if (dir === "up") {
                     while (line >= 0) {
-                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (line == 0 || arr[line - 1][column] && arr[line-1][column] === "#") {
+                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (line == 0) {
+                            break;
+                        } else if (arr[line - 1][column] && arr[line-1][column] === "#") {
                             arr[line][column] = "X";
                             movesCount++;
                             break;
@@ -37,8 +39,10 @@
                     dir = "right";
                 } else if (dir === "right") {
                     while (column <= arr[line].length - 1) {
-                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (column == arr[line].length - 1 || arr[line][column+1] && arr[line][column+1] === "#") {
+                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (column == arr[line].length - 1) {
+                            break;
+                        } else if (arr[line][column+1] && arr[line][column+1] === "#") {
                             arr[line][column] = "X";
                             movesCount++;
                             break;
@@ -51,8 +55,10 @@
                     dir = "down";
                 } else if (dir === "down") {
                     while (line <= arr.length - 1) {
-                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (line == arr.length - 1 || arr[line+1][column] && arr[line+1][column] === "#") {
+                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (line == arr.length - 1) {
+                            break;
+                        } else if (arr[line+1][column] && arr[line+1][column] === "#") {
                             arr[line][column] = "X";
                             movesCount++;
                             break;
@@ -65,8 +71,10 @@
                     dir = "left";
                 } else if (dir === "left") {
                     while (column >= 0) {
-                        console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (column == 0 || arr[line][column-1] && arr[line][column-1] === "#") {
+                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+                        if (column == 0) {
+                            break;
+                        } else if (arr[line][column-1] && arr[line][column-1] === "#") {
                             arr[line][column] = "X";
                             movesCount++;
                             break;
