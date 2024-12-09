@@ -37,3 +37,4 @@ I'm not a developper. I'm a linguist.
 | [6](Day_06) | [Part I](Day_06/part1.html) |   ✅   | [Part II](Day_06/part2.html) |   ⏳   |          |
 | [7](Day_07) | [Part I](Day_07/part1.html) |   ✅   | [Part II](Day_07/part2.html) |   ✅   |          |
 | [8](Day_08) | [Part I](Day_08/part1.html) |   ⏳   | [Part II](Day_08/part2.html) |   ⏳   |          |
+| [9](Day_09) | [Part I](Day_09/part1.html) |   ⏳   | [Part II](Day_09/part2.html) |   ⏳   |          |
