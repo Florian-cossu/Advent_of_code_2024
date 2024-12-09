@@ -15,18 +15,42 @@
         <textarea id="input" placeholder="Enter your input here..."></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
+            function reorderArray(str) {                
+                // Turn the string into an array of characters
+                let arrChars = Array.from(str);
+                
+                // Start moving dots to the right and digits to the left
+                let left = 0;
+                let right = arrChars.length - 1;
+
+                // Continue looping until the left and right pointers meet
+                while (left < right) {
+                    if (arrChars[left] === '.' && arrChars[right] !== '.') {
+                        // Swap the dot at the left with the digit at the right
+                        [arrChars[left], arrChars[right]] = [arrChars[right], arrChars[left]];
+                        left++;
+                        right--;
+                    } else if (arrChars[left] !== '.' && arrChars[right] === '.') {
+                        // Just move the pointers
+                        left++;
+                        right--;
+                    } else if (arrChars[left] === '.' && arrChars[right] === '.') {
+                        // If both are dots, just move the right pointer
+                        right--;
+                    } else {
+                        // If both are digits, just move the left pointer
+                        left++;
+                    }
+                }
+
+                // Convert the array of characters back to a string
+                return arrChars;
+            }
+
             async function strParse() {
                 let result = 0;
 
-                const inputSrc = document.getElementById('input').value;
-                const strArr = inputSrc.split('\n');
-
-                strArr.forEach(line => {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
-
-                        pageOrderingRules[key].push(right.trim());
-                });
+                const inputSrc = document.getElementById("input").value;
 
                 const expectedResult = async () => {
                     const url = "https://advent.fly.dev/solve/2024/9/2";
@@ -55,16 +79,37 @@
                 };
 
                 const expectedAnswer =  await expectedResult();
+
+                let iterator = 0;
                 
-                // CODE HERE
+                let fileArrayExpansion = Array.from(inputSrc)
+                .map((el, index) => {
+                    if (index % 2 === 0) {
+                        let result = iterator.toString().repeat(parseInt(el));
+                        iterator++;
+                        return result;
+                    } else {
+                        return ".".repeat(parseInt(el));
+                    }
+                })
+                .join("");
+
+                // console.log(fileArrayExpansion);
+
+                let reorderedArr = reorderArray(fileArrayExpansion);
+
+                // console.log(reorderedArr);
+
+                for (let i = 0; i < reorderedArr.length; i++) {
+                    if (reorderedArr[i].match(/\d/)) {
+                        result += i * parseInt(reorderedArr[i]);
+                    } else {
+                        break;
+                    }
+                }
 
                 if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
-                        result: result,
-                        expected_result: expectedAnswer,
-                        delta: Math.abs(result - expectedAnswer),
-                        direction_check_count: directionCheckExec,
-                        result_minus_check_execs: result - directionCheckExec}, null, 2));
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer);
                 } else {
                     resultDisplay(result);
                 }
