@@ -21,14 +21,7 @@
                 const inputSrc = document.getElementById("input").value;
 
                 // Parse and validate input
-                const strArr = inputSrc.split("\n");
-
-                strArr.forEach(line => {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
-
-                        pageOrderingRules[key].push(right.trim());
-                });
+                const strArr = inputSrc.split("");
 
                 const expectedResult = async () => {
                     const url = "https://advent.fly.dev/solve/2024/8/1";
