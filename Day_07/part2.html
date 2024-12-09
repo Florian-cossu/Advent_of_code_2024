@@ -45,7 +45,6 @@
             function evaluateExpressions(expressions) {
                 return expressions.map(expr => {
                     // Step 1: Handle concatenation by removing `||` and combining adjacent numbers
-                    let string = expr.replace(/\s\|\|\s/g, ""); // Remove '||' and combine numbers
                     const tokens = string.split(/\s+/); // Split into tokens based on spaces
 
                     // Step 2: Evaluate the expression left-to-right
@@ -59,6 +58,8 @@
                             result += nextNumber;
                         } else if (operator === "*") {
                             result *= nextNumber;
+                        } else if (operator === "||") {
+                            result = parseInt(result.toString() + nextNumber.toString(), 10);
                         } else {
                             console.error(`Unknown operator: ${operator}`);
                             return null; // Handle unexpected cases gracefully
