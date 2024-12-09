@@ -34,13 +34,14 @@
         }
 
         #progressBar {
-            width: 22%;
+            width: 0%;
             display: flex;
             flex-flow: row;
             align-items: center;
             background-color: var(--accent-color-lighter);
             justify-content: center;
             border-radius: .15rem;
+            overflow: hidden;
         }
 
         #progressBar > p {
@@ -54,6 +55,28 @@
             }
         }
     </style>
+    <script>
+        function countCompletedTasks() {
+            const tableBody = document.getElementById("days-table");
+            
+            const rows = tableBody.getElementsByTagName("tr");
+            
+            let count = 0;
+
+            // Parcourir les lignes du tableau
+            for (let row of rows) {
+                // Récupérer la dernière cellule (statut) de chaque ligne
+                const statusCell = row.cells[row.cells.length - 1];
+                if (statusCell && statusCell.textContent.trim() === "✅") {
+                    count++;
+                }
+            }
+
+            percentage = Math.round(((count*2)/50)*100);
+
+            return percentage;
+        }
+    </script>
 </head>
 
 <body>
@@ -62,7 +85,7 @@
 
         <div id="progressBarContainer">
             <div id="progressBar">
-                <p>22%</p>
+                <p>0%</p>
             </div>
         </div>
 
@@ -116,7 +139,7 @@
                     <td>Day 7</td>
                     <td><a href="Day_07/part1.html">Day 7 - Part I</a></td>
                     <td><a href="Day_07/part2.html">Day 7 - Part II</a></td>
-                    <td>⏳</td>
+                    <td>✅</td>
                 </tr>
                 <tr>
                     <td>Day 8</td>
@@ -126,6 +149,14 @@
                 </tr>
             </tbody>
         </table>
+        <script>
+            let count = countCompletedTasks();
+            let progressValue = document.querySelector("#progressBar > p");
+            let progressBar = document.querySelector("#progressBar");
+
+            progressValue.innerText = count;
+            progressBar.style.width = count;
+        </script>
     </div>
 </body>
 </html>

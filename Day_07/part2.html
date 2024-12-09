@@ -45,7 +45,7 @@
             function evaluateExpressions(expressions) {
                 return expressions.map(expr => {
                     // Step 1: Handle concatenation by removing `||` and combining adjacent numbers
-                    const tokens = string.split(/\s+/); // Split into tokens based on spaces
+                    const tokens = expr.split(/\s+/); // Split into tokens based on spaces
 
                     // Step 2: Evaluate the expression left-to-right
                     let result = parseInt(tokens[0], 10); // Initialize with the first number
@@ -123,13 +123,13 @@
                     const expressions = generateExpressions(array);
                     const evaluated = evaluateExpressions(expressions);
 
-                    console.log({
+                    /*console.log({
                         key: key,
                         values: array,
                         exp: expressions,
                         calculations: evaluated,
                         has_match: evaluated.some(({ result }) => result === key)
-                    })
+                    })*/
 
                     // Check if the key matches any evaluated result
                     const matchesKey = evaluated.some(({ result }) => result === key);
