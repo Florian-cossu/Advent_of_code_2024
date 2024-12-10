@@ -25,16 +25,17 @@ Since I am a Javascript noob I decided to try and do this challenge in JS to get
 
 I'm not a developper. I'm a linguist.
 
-## Current progress ![](https://geps.dev/progress/26)
+## Current progress ![](https://geps.dev/progress/28)
 
-|     Day     | Part 1                      | Status | Part 2                       | Status | Comments |
-| :---------: | :-------------------------- | :----: | ---------------------------- | :----: | :------- |
-| [1](Day_01) | [Part I](Day_01/part1.html) |   ✅   | [Part II](Day_01/part2.html) |   ✅   |          |
-| [2](Day_02) | [Part I](Day_02/part1.html) |   ✅   | [Part II](Day_02/part2.html) |   ✅   |          |
-| [3](Day_03) | [Part I](Day_03/part1.html) |   ✅   | [Part II](Day_03/part2.html) |   ✅   |          |
-| [4](Day_04) | [Part I](Day_04/part1.html) |   ✅   | [Part II](Day_04/part2.html) |   ✅   |          |
-| [5](Day_05) | [Part I](Day_05/part1.html) |   ✅   | [Part II](Day_05/part2.html) |   ✅   |          |
-| [6](Day_06) | [Part I](Day_06/part1.html) |   ✅   | [Part II](Day_06/part2.html) |   ⏳   |          |
-| [7](Day_07) | [Part I](Day_07/part1.html) |   ✅   | [Part II](Day_07/part2.html) |   ✅   |          |
-| [8](Day_08) | [Part I](Day_08/part1.html) |   ⏳   | [Part II](Day_08/part2.html) |   ⏳   |          |
-| [9](Day_09) | [Part I](Day_09/part1.html) |   ⏳   | [Part II](Day_09/part2.html) |   ⏳   |          |
+|     Day      | Part 1                      | Status | Part 2                       | Status | Comments                                                                                               |
+| :----------: | :-------------------------- | :----: | ---------------------------- | :----: | :----------------------------------------------------------------------------------------------------- |
+| [1](Day_01)  | [Part I](Day_01/part1.html) |   ✅   | [Part II](Day_01/part2.html) |   ✅   |                                                                                                        |
+| [2](Day_02)  | [Part I](Day_02/part1.html) |   ✅   | [Part II](Day_02/part2.html) |   ✅   |                                                                                                        |
+| [3](Day_03)  | [Part I](Day_03/part1.html) |   ✅   | [Part II](Day_03/part2.html) |   ✅   |                                                                                                        |
+| [4](Day_04)  | [Part I](Day_04/part1.html) |   ✅   | [Part II](Day_04/part2.html) |   ✅   |                                                                                                        |
+| [5](Day_05)  | [Part I](Day_05/part1.html) |   ✅   | [Part II](Day_05/part2.html) |   ✅   |                                                                                                        |
+| [6](Day_06)  | [Part I](Day_06/part1.html) |   ✅   | [Part II](Day_06/part2.html) |   ⏳   |                                                                                                        |
+| [7](Day_07)  | [Part I](Day_07/part1.html) |   ✅   | [Part II](Day_07/part2.html) |   ✅   |                                                                                                        |
+| [8](Day_08)  | [Part I](Day_08/part1.html) |   ⏳   | [Part II](Day_08/part2.html) |   ⏳   |                                                                                                        |
+| [9](Day_09)  | [Part I](Day_09/part1.html) |   ⏳   | [Part II](Day_09/part2.html) |   ⏳   | Part I was really tricky actually. Understanding the issue stemming from my initial attempt was a pain |
+| [10](Day_10) | [Part I](Day_10/part1.html) |   ⏳   | [Part II](Day_10/part2.html) |   ⏳   |                                                                                                        |
