@@ -16,38 +16,40 @@
         <textarea id="input" placeholder="Enter your input here..."></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            function reorderArray(str) {                
-                // Turn the string into an array of characters
-                let arrChars = Array.from(str.trim());
+            let result = 0;
+
+            function reorderArray(arr) {   
                 
+                arr = Array.from(arr);
                 // Start moving dots to the right and digits to the left
                 let left = 0;
-                let right = arrChars.length - 1;
+                let right = arr.length - 1;
 
                 while (left < right) {
                     // Find the next dot from the left
-                    while (left < arrChars.length && arrChars[left] !== '.') {
+                    while (left < arr.length && arr[left] !== '.') {
                         left++;
                     }
 
                     // Find the next non-dot from the right
-                    while (right >= left && arrChars[right] === '.') {
+                    while (right >= left && arr[right] === '.') {
                         right--;
                     }
 
                     // Swap the characters if left is less than right
                     if (left < right) {
-                        [arrChars[left], arrChars[right]] = [arrChars[right], arrChars[left]];
+                        [arr[left], arr[right]] = [arr[right], arr[left]];
                         left++;
                         right--;
                     }
                 }
-                return arrChars;
+                // console.log(arr)
+                return arr;
             }
             
             function checkReordering (arr) {
                 let left = 0;
-                let right = arrChars.length - 1;
+                let right = arr.length - 1;
                 
                 while (arr[left] !== ".") {
                     left++;
@@ -57,11 +59,11 @@
                     right--
                 }
                 
-                return ( left > right ? true : false );
+                return ( left >= right ? false : true );
             }
 
             async function strParse() {
-                let result = 0;
+                result = 0;
 
                 const inputSrc = document.getElementById("input").value.trim();
 
@@ -104,8 +106,7 @@
                     } else {
                         return ".".repeat(parseInt(el));
                     }
-                })
-                .join("");
+                }).join("")
 
                 // console.log(fileArrayExpansion);
 
@@ -114,25 +115,30 @@
                 let toReorder = true;
                 let additionalReorder = 0;
                 
-                while (toReorder == true) {
-                    arr = reorderedArr.join('');
+                while (toReorder) {
                     toReorder = checkReordering(reorderedArr);
-                    reorderedArr = reorderArray(arr);
+                    reorderedArr = reorderArray(reorderedArr);
                     additionalReorder++;
+                    console.log(additionalReorder + " Reorder")
                 }
 
-                console.log(reorderedArr);
+                // console.log(reorderedArr);
 
-                for (let i = 0; i < reorderedArr.length; i++) {
-                    if (reorderedArr[i].match(/\d{1}/)) {
-                        result += i * parseInt(reorderedArr[i]);
+                for (let i = 0; i < reorderedArr.length - 1; i++) {
+                    if (reorderedArr[i] !== ".") {
+                        console.log("Index " + i + " contains: " + reorderedArr[i])
+                        result += parseInt(i * parseInt(reorderedArr[i]));
                     } else {
                         break;
                     }
                 }
 
                 if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + ". Did " + additionalReorder + " reordering rounds");
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
+                        result: result,
+                        expected_result: expectedAnswer,
+                        delta: Math.abs(result - expectedAnswer),
+                        additional_reorder_rounds: additionalReorder}, null, 2));
                 } else {
                     resultDisplay(result);
                 }
