@@ -42,9 +42,22 @@
                         right--;
                     }
                 }
-
-                // Convert the array of characters back to a string
                 return arrChars;
+            }
+            
+            function checkReordering (arr) {
+                let left = 0;
+                let right = arrChars.length - 1;
+                
+                while (arr[left] !== ".") {
+                    left++;
+                }
+                
+                while (arr[right] == ".") {
+                    right--
+                }
+                
+                return ( left > right ? true : false );
             }
 
             async function strParse() {
@@ -97,6 +110,16 @@
                 // console.log(fileArrayExpansion);
 
                 let reorderedArr = reorderArray(fileArrayExpansion);
+                
+                let toReorder = true;
+                let additionalReorder = 0;
+                
+                while (toReorder == true) {
+                    arr = reorderedArr.join('');
+                    toReorder = checkReordering(reorderedArr);
+                    reorderedArr = reorderArray(arr);
+                    additionalReorder++;
+                }
 
                 console.log(reorderedArr);
 
@@ -109,7 +132,7 @@
                 }
 
                 if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer);
+                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + ". Did " + additionalReorder + " reordering rounds");
                 } else {
                     resultDisplay(result);
                 }
