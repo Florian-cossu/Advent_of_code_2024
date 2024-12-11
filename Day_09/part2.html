@@ -18,6 +18,8 @@
         <script>
             let result = 0;
             let indexedDisk = [];
+            let filesIndex = [];
+            let spacesIndex = [];
     
             function newReorder(arr) {
               // Reorder furthest right hand file with furthest left hand space with matching slots
@@ -32,24 +34,23 @@
                     let end = i;
 
                     if (arr[i] === ".") {
+                        // Initialize the array if not already
+                        if (!spacesIndex[spaceIndex]) spacesIndex[spaceIndex] = [];
                         // It's a space range
                         while (end < arr.length && arr[end] === ".") {
                             end++;
                         }
-                        indexedDisk.push({
-                            key: `space_${spaceIndex}`,
-                            range: [start, end - 1],
-                        });
+                        spacesIndex[spaceIndex].push([start, end - 1]);
                         spaceIndex++;
                     } else {
+                        diskIndex = parseInt(arr[i]);
+                        // Initialize the array if not already
+                        if (!filesIndex[diskIndex]) filesIndex[diskIndex] = [];
                         // It's a number range
                         while (end < arr.length && arr[end] !== ".") {
                             end++;
                         }
-                        indexedDisk.push({
-                            key: `num_${diskIndex}`,
-                            range: [start, end - 1],
-                        });
+                        filesIndex[diskIndex].push([start, end - 1]);
                         diskIndex++;
                     }
 
@@ -113,7 +114,9 @@
 
               diskIndexer(diskContent);
 
-              console.log(diskContent, indexedDisk);
+              console.log(diskContent);
+              console.log(filesIndex);
+              console.log(spacesIndex);
     
               for (
                 let i = 0;
