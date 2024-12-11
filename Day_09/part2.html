@@ -16,106 +16,144 @@
         <textarea id="input" placeholder="Enter your input here..."></textarea>
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
-            function reorderArray(str) {                
-                // Turn the string into an array of characters
-                let arrChars = Array.from(str);
-                
-                // Start moving dots to the right and digits to the left
-                let left = 0;
-                let right = arrChars.length - 1;
-
-                // Continue looping until the left and right pointers meet
-                while (left < right) {
-                    if (arrChars[left] === '.' && arrChars[right] !== '.') {
-                        // Swap the dot at the left with the digit at the right
-                        [arrChars[left], arrChars[right]] = [arrChars[right], arrChars[left]];
-                        left++;
-                        right--;
-                    } else if (arrChars[left] !== '.' && arrChars[right] === '.') {
-                        // Just move the pointers
-                        left++;
-                        right--;
-                    } else if (arrChars[left] === '.' && arrChars[right] === '.') {
-                        // If both are dots, just move the right pointer
-                        right--;
-                    } else {
-                        // If both are digits, just move the left pointer
-                        left++;
-                    }
-                }
-
-                // Convert the array of characters back to a string
-                return arrChars;
-            }
-
-            async function strParse() {
-                let result = 0;
-
-                const inputSrc = document.getElementById("input").value;
-
-                const expectedResult = async () => {
-                    const url = "https://advent.fly.dev/solve/2024/9/2";
-                    const headers = {
-                        "Accept": "text/plain",
-                        "Content-Type": "text/plain"
-                    };
-                    const data = inputSrc;
-
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: data
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-
-                        return await response.text();
-                    } catch (error) {
-                        console.error("Error:", error.message);
-                        return null;
-                    }
-                };
-
-                const expectedAnswer =  await expectedResult();
-
-                let iterator = 0;
-                
-                let fileArrayExpansion = Array.from(inputSrc)
-                .map((el, index) => {
-                    if (index % 2 === 0) {
-                        let result = iterator.toString().repeat(parseInt(el));
-                        iterator++;
-                        return result;
-                    } else {
-                        return ".".repeat(parseInt(el));
-                    }
-                })
-                .join("");
-
-                // console.log(fileArrayExpansion);
-
-                let reorderedArr = reorderArray(fileArrayExpansion);
-
-                // console.log(reorderedArr);
-
-                for (let i = 0; i < reorderedArr.length; i++) {
-                    if (reorderedArr[i].match(/\d/)) {
-                        result += i * parseInt(reorderedArr[i]);
-                    } else {
-                        break;
-                    }
-                }
-
-                if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer);
+            let result = 0;
+    
+            function newReorder(arr) {
+              // Start moving dots to the right and digits to the left
+              let left;
+              let right;
+    
+              while (1) {
+                for (left = 0; left < arr.length && arr[left] !== "."; left++) {}
+    
+                for (
+                  right = arr.length - 1;
+                  right >= 0 && arr[right] === ".";
+                  right--
+                ) {}
+    
+                if (left < right) {
+                  [arr[left], arr[right]] = [arr[right], arr[left]];
                 } else {
-                    resultDisplay(result);
+                  break;
                 }
+              }
             }
-        </script>
+    
+            function reorderArray(arr) {
+              arr = Array.from(arr);
+              // Start moving dots to the right and digits to the left
+              let left = 0;
+              let right = arr.length - 1;
+    
+              while (left < right) {
+                console.log(arr.join(""));
+                // Find the next dot from the left
+                while (left < arr.length && arr[left] !== ".") {
+                  left++;
+                }
+    
+                // Find the next non-dot from the right
+                while (right >= left && arr[right] === ".") {
+                  right--;
+                }
+    
+                // Swap the characters if left is less than right
+                if (left < right) {
+                  [arr[left], arr[right]] = [arr[right], arr[left]];
+                  left++;
+                  right--;
+                }
+              }
+              // console.log(arr)
+              return arr;
+            }
+    
+            async function strParse() {
+              result = 0;
+    
+              const inputSrc = document.getElementById("input").value.trim();
+    
+              const expectedResult = async () => {
+                const url = "https://advent.fly.dev/solve/2024/9/2";
+                const headers = {
+                  Accept: "text/plain",
+                  "Content-Type": "text/plain",
+                };
+                const data = inputSrc;
+    
+                try {
+                  const response = await fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: data,
+                  });
+    
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+    
+                  return await response.text();
+                } catch (error) {
+                  console.error("Error:", error.message);
+                  return null;
+                }
+              };
+    
+              const expectedAnswer = await expectedResult();
+    
+              let iterator = 0;
+    
+              let stringToArray = Array.from(inputSrc);
+    
+              let diskContent = [];
+    
+              for (let i = 0; i < stringToArray.length; i++) {
+                if (i % 2 === 0) {
+                  for (let j = 0; j < parseInt(stringToArray[i]); j++) {
+                    diskContent.push(iterator.toString());
+                  }
+                  iterator++;
+                } else {
+                  for (let j = 0; j < parseInt(stringToArray[i]); j++) {
+                    diskContent.push(".");
+                  }
+                }
+              }
+    
+              newReorder(diskContent);
+    
+              for (
+                let i = 0;
+                i < diskContent.length && diskContent[i] !== ".";
+                i++
+              ) {
+                result += i * parseInt(diskContent[i]);
+              }
+    
+              if (result != expectedAnswer) {
+                resultDisplay(
+                  "Your result is incorrect (" +
+                    result +
+                    "). The correct answer was " +
+                    expectedAnswer +
+                    "\n\n" +
+                    JSON.stringify(
+                      {
+                        result: result,
+                        expected_result: expectedAnswer,
+                        delta: Math.abs(result - expectedAnswer),
+                        additional_reorder_rounds: additionalReorder,
+                      },
+                      null,
+                      2
+                    )
+                );
+              } else {
+                resultDisplay(result);
+              }
+            }
+          </script>
         <div id="resultDisplay">
             <!-- Result display -->
         </div>

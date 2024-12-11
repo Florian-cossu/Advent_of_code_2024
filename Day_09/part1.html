@@ -1,195 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AoC - Day 9 part I</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-      rel="stylesheet"
-    />
+	<title>AoC - Day 9 part I</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<link rel="stylesheet" href="../Style/style.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link
+	  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+	  rel="stylesheet"
+	/>
   </head>
 
   <body>
-    <h1>Advent of Code - Day 9 part I</h1>
-    <div id="card">
-      <a href="../index.html" class="homeLink">→ Home</a>
-      <a href="part2.html" class="homeLink">→ Part II</a>
-      <textarea id="input" placeholder="Enter your input here..."></textarea>
-      <button class="button" type="button" onclick="strParse()">Test</button>
-      <script>
-        let result = 0;
+	<h1>Advent of Code - Day 9 part I</h1>
+	<div id="card">
+	  <a href="../index.html" class="homeLink">→ Home</a>
+	  <a href="part2.html" class="homeLink">→ Part II</a>
+	  <textarea id="input" placeholder="Enter your input here..."></textarea>
+	  <button class="button" type="button" onclick="strParse()">Test</button>
+	  <script>
+		let result = 0;
 
-        function newReorder(arr) {
-          // Start moving dots to the right and digits to the left
-          let left;
-          let right;
+		function newReorder(arr) {
+		  // Start moving dots to the right and digits to the left
+		  let left;
+		  let right;
 
-          while (1) {
-            for (left = 0; left < arr.length && arr[left] !== "."; left++) {}
+		  while (1) {
+			for (left = 0; left < arr.length && arr[left] !== "."; left++) {}
 
-            for (
-              right = arr.length - 1;
-              right >= 0 && arr[right] === ".";
-              right--
-            ) {}
+			for (
+			  right = arr.length - 1;
+			  right >= 0 && arr[right] === ".";
+			  right--
+			) {}
 
-            if (left < right) {
-              [arr[left], arr[right]] = [arr[right], arr[left]];
-            } else {
-              break;
-            }
-          }
-        }
+			if (left < right) {
+			  [arr[left], arr[right]] = [arr[right], arr[left]];
+			} else {
+			  break;
+			}
+		  }
+		}
 
-        function reorderArray(arr) {
-          arr = Array.from(arr);
-          // Start moving dots to the right and digits to the left
-          let left = 0;
-          let right = arr.length - 1;
+		function reorderArray(arr) {
+		  arr = Array.from(arr);
+		  // Start moving dots to the right and digits to the left
+		  let left = 0;
+		  let right = arr.length - 1;
 
-          while (left < right) {
-            console.log(arr.join(""));
-            // Find the next dot from the left
-            while (left < arr.length && arr[left] !== ".") {
-              left++;
-            }
+		  while (left < right) {
+			console.log(arr.join(""));
+			// Find the next dot from the left
+			while (left < arr.length && arr[left] !== ".") {
+			  left++;
+			}
 
-            // Find the next non-dot from the right
-            while (right >= left && arr[right] === ".") {
-              right--;
-            }
+			// Find the next non-dot from the right
+			while (right >= left && arr[right] === ".") {
+			  right--;
+			}
 
-            // Swap the characters if left is less than right
-            if (left < right) {
-              [arr[left], arr[right]] = [arr[right], arr[left]];
-              left++;
-              right--;
-            }
-          }
-          // console.log(arr)
-          return arr;
-        }
+			// Swap the characters if left is less than right
+			if (left < right) {
+			  [arr[left], arr[right]] = [arr[right], arr[left]];
+			  left++;
+			  right--;
+			}
+		  }
+		  // console.log(arr)
+		  return arr;
+		}
 
-        function checkReordering(arr) {
-          let left = 0;
-          let right = arr.length - 1;
+		async function strParse() {
+		  result = 0;
 
-          while (arr[left] !== ".") {
-            left++;
-          }
+		  const inputSrc = document.getElementById("input").value.trim();
 
-          while (arr[right] == ".") {
-            right--;
-          }
+		  const expectedResult = async () => {
+			const url = "https://advent.fly.dev/solve/2024/9/1";
+			const headers = {
+			  Accept: "text/plain",
+			  "Content-Type": "text/plain",
+			};
+			const data = inputSrc;
 
-          return left >= right ? false : true;
-        }
+			try {
+			  const response = await fetch(url, {
+				method: "POST",
+				headers: headers,
+				body: data,
+			  });
 
-        async function strParse() {
-          result = 0;
+			  if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			  }
 
-          const inputSrc = document.getElementById("input").value.trim();
+			  return await response.text();
+			} catch (error) {
+			  console.error("Error:", error.message);
+			  return null;
+			}
+		  };
 
-          const expectedResult = async () => {
-            const url = "https://advent.fly.dev/solve/2024/9/1";
-            const headers = {
-              Accept: "text/plain",
-              "Content-Type": "text/plain",
-            };
-            const data = inputSrc;
+		  const expectedAnswer = await expectedResult();
 
-            try {
-              const response = await fetch(url, {
-                method: "POST",
-                headers: headers,
-                body: data,
-              });
+		  let iterator = 0;
 
-              if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-              }
+		  let stringToArray = Array.from(inputSrc);
 
-              return await response.text();
-            } catch (error) {
-              console.error("Error:", error.message);
-              return null;
-            }
-          };
+		  let diskContent = [];
 
-          const expectedAnswer = await expectedResult();
+		  for (let i = 0; i < stringToArray.length; i++) {
+			if (i % 2 === 0) {
+			  for (let j = 0; j < parseInt(stringToArray[i]); j++) {
+				diskContent.push(iterator.toString());
+			  }
+			  iterator++;
+			} else {
+			  for (let j = 0; j < parseInt(stringToArray[i]); j++) {
+				diskContent.push(".");
+			  }
+			}
+		  }
 
-          let iterator = 0;
+		  newReorder(diskContent);
 
-          let test = [];
+		  for (
+			let i = 0;
+			i < diskContent.length && diskContent[i] !== ".";
+			i++
+		  ) {
+			result += i * parseInt(diskContent[i]);
+		  }
 
-          let fileArrayExpansion = Array.from(inputSrc)
-            .map((el, index) => {
-              if (index % 2 === 0) {
-                for (let i = 0; i < parseInt(el); i++) {
-                  test.push(iterator.toString());
-                }
-                let result = iterator.toString().repeat(parseInt(el));
-                iterator++;
-                return result;
-              } else {
-                for (let i = 0; i < parseInt(el); i++) {
-                  test.push(".");
-                }
-                return ".".repeat(parseInt(el));
-              }
-            })
-            .join("");
-
-          /* console.log(fileArrayExpansion);
-
-                let reorderedArr = reorderArray(fileArrayExpansion);
-                
-                let toReorder = true;
-                let additionalReorder = 0;
-                
-                while (toReorder) {
-                    toReorder = checkReordering(reorderedArr);
-                    reorderedArr = reorderArray(reorderedArr);
-                    additionalReorder++;
-                    console.log(additionalReorder + " Reorder")
-                }
-
-                // console.log(reorderedArr);
-
-                for (let i = 0; i < reorderedArr.length - 1; i++) {
-                    if (reorderedArr[i] !== ".") {
-                        // console.log("Index " + i + " contains: " + reorderedArr[i])
-                        result += i * parseInt(reorderedArr[i]);
-                    } else {
-                    }
-                }
-            */
-          newReorder(test);
-
-          console.log(test);
-
-          for (let i = 0; i < test.length && test[i] !== "."; i++) {
-            result += i * parseInt(test[i]);
-          }
-
-          resultDisplay(result);
-
-          // if (result != expectedAnswer) {
-          //     resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
-          //         result: result,
-          //         expected_result: expectedAnswer,
-          //         delta: Math.abs(result - expectedAnswer),
-          //         additional_reorder_rounds: additionalReorder}, null, 2));
-          // } else {
-          //     resultDisplay(result);
-          // }
-        }
-      </script>
-      <div id="resultDisplay">
-        <!-- Result display -->
-      </div>
-    </div>
+		  if (result != expectedAnswer) {
+			resultDisplay(
+			  "Your result is incorrect (" +
+				result +
+				"). The correct answer was " +
+				expectedAnswer +
+				"\n\n" +
+				JSON.stringify(
+				  {
+					result: result,
+					expected_result: expectedAnswer,
+					delta: Math.abs(result - expectedAnswer),
+					additional_reorder_rounds: additionalReorder,
+				  },
+				  null,
+				  2
+				)
+			);
+		  } else {
+			resultDisplay(result);
+		  }
+		}
+	  </script>
+	  <div id="resultDisplay">
+		<!-- Result display -->
+	  </div>
+	</div>
   </body>
 </html>
