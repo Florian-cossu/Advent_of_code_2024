@@ -5,6 +5,7 @@
     <script src="../lib/js/resultDisplay.js"></script>
     <script src="../lib/js/debug_console.js" defer></script>
     <link rel="stylesheet" href="../Style/style.css">
+    <link rel="stylesheet" href="../Style/debug_console.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
@@ -22,7 +23,7 @@
             let filesIndex = [];
             let spacesIndex = [];
     
-            function newReorder(arr) {
+            function diskDefrag(disk, fileIndexes, spaceIndexes) {
               // Reorder furthest right hand file with furthest left hand space with matching slots
             }
     
@@ -41,7 +42,7 @@
                         while (end < arr.length && arr[end] === ".") {
                             end++;
                         }
-                        spacesIndex[spaceIndex].push([start, end - 1]);
+                        if (!spacesIndex[spaceIndex][0]) spacesIndex[spaceIndex].push([start, end - 1]);
                         spaceIndex++;
                     } else {
                         diskIndex = parseInt(arr[i]);
@@ -51,7 +52,7 @@
                         while (end < arr.length && arr[end] !== ".") {
                             end++;
                         }
-                        filesIndex[diskIndex].push([start, end - 1]);
+                        if (!filesIndex[diskIndex][0]) filesIndex[diskIndex].push([start, end - 1]);
                         diskIndex++;
                     }
 
@@ -116,8 +117,13 @@
               diskIndexer(diskContent);
 
               console.log(diskContent);
-              console.log(filesIndex);
-              console.log(spacesIndex);
+
+              console.group("Outputted files");
+              console.table("File indexes", filesIndex);
+              console.table("Free space indexes", spacesIndex);
+              console.groupEnd();
+
+
     
               for (
                 let i = 0;
