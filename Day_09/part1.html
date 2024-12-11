@@ -43,35 +43,6 @@
 		  }
 		}
 
-		function reorderArray(arr) {
-		  arr = Array.from(arr);
-		  // Start moving dots to the right and digits to the left
-		  let left = 0;
-		  let right = arr.length - 1;
-
-		  while (left < right) {
-			console.log(arr.join(""));
-			// Find the next dot from the left
-			while (left < arr.length && arr[left] !== ".") {
-			  left++;
-			}
-
-			// Find the next non-dot from the right
-			while (right >= left && arr[right] === ".") {
-			  right--;
-			}
-
-			// Swap the characters if left is less than right
-			if (left < right) {
-			  [arr[left], arr[right]] = [arr[right], arr[left]];
-			  left++;
-			  right--;
-			}
-		  }
-		  // console.log(arr)
-		  return arr;
-		}
-
 		async function strParse() {
 		  result = 0;
 

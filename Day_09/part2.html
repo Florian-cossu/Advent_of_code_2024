@@ -17,58 +17,46 @@
         <button class="button" type="button" onclick="strParse()">Test</button>
         <script>
             let result = 0;
+            let indexedDisk = [];
     
             function newReorder(arr) {
-              // Start moving dots to the right and digits to the left
-              let left;
-              let right;
-    
-              while (1) {
-                for (left = 0; left < arr.length && arr[left] !== "."; left++) {}
-    
-                for (
-                  right = arr.length - 1;
-                  right >= 0 && arr[right] === ".";
-                  right--
-                ) {}
-    
-                if (left < right) {
-                  [arr[left], arr[right]] = [arr[right], arr[left]];
-                } else {
-                  break;
-                }
-              }
+              // Reorder furthest right hand file with furthest left hand space with matching slots
             }
     
-            function reorderArray(arr) {
-              arr = Array.from(arr);
-              // Start moving dots to the right and digits to the left
-              let left = 0;
-              let right = arr.length - 1;
-    
-              while (left < right) {
-                console.log(arr.join(""));
-                // Find the next dot from the left
-                while (left < arr.length && arr[left] !== ".") {
-                  left++;
+            function diskIndexer(arr) {
+                let spaceIndex = 0;
+                let diskIndex = 0;
+
+                for (let i = 0; i < arr.length; ) {
+                    let start = i;
+                    let end = i;
+
+                    if (arr[i] === ".") {
+                        // It's a space range
+                        while (end < arr.length && arr[end] === ".") {
+                            end++;
+                        }
+                        indexedDisk.push({
+                            key: `space_${spaceIndex}`,
+                            range: [start, end - 1],
+                        });
+                        spaceIndex++;
+                    } else {
+                        // It's a number range
+                        while (end < arr.length && arr[end] !== ".") {
+                            end++;
+                        }
+                        indexedDisk.push({
+                            key: `num_${diskIndex}`,
+                            range: [start, end - 1],
+                        });
+                        diskIndex++;
+                    }
+
+                    i = end; // Move the index to the next unprocessed element
                 }
-    
-                // Find the next non-dot from the right
-                while (right >= left && arr[right] === ".") {
-                  right--;
-                }
-    
-                // Swap the characters if left is less than right
-                if (left < right) {
-                  [arr[left], arr[right]] = [arr[right], arr[left]];
-                  left++;
-                  right--;
-                }
-              }
-              // console.log(arr)
-              return arr;
             }
-    
+
             async function strParse() {
               result = 0;
     
@@ -121,7 +109,11 @@
                 }
               }
     
-              newReorder(diskContent);
+              // newReorder(diskContent);
+
+              diskIndexer(diskContent);
+
+              console.log(diskContent, indexedDisk);
     
               for (
                 let i = 0;
@@ -143,7 +135,6 @@
                         result: result,
                         expected_result: expectedAnswer,
                         delta: Math.abs(result - expectedAnswer),
-                        additional_reorder_rounds: additionalReorder,
                       },
                       null,
                       2
