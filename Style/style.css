@@ -17,6 +17,10 @@
         --accent-color-lighter-transp: #4e8fab50;
         --accent-color-lighter-more-transp: #1193cb20;
     }
+
+    .debugConsole {
+        background-color: #000000c9;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +30,10 @@
         --card-bg: #ffffff30;
         --accent-color-lighter-transp: #69d2ff50;
         --accent-color-lighter-more-transp: #69d2ff20;
+    }
+
+    #debugConsole {
+        background-color: #000000a8;
     }
 }
 
@@ -44,6 +52,11 @@
 
     .copyButton {
         margin: auto;
+    }
+
+    #debugConsole {
+        max-height: 20vmin !important;
+        overflow: auto;
     }
 
     .updatedResult {
@@ -120,6 +133,20 @@ body {
 .button:hover, .copyButton:hover {
     background-color: var(--accent-color-lighter);
     box-shadow: var(--box-shadow);
+}
+
+#debugConsole {
+    width: 90%;
+    background-color: #000000a8;
+    overflow-y: auto;
+    border-radius: var(--light-border-radius);
+    padding: .5rem;
+    border: solid .1rem #ffffff50;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    color: #0f0;
 }
 
 .updatedResult {
