@@ -1,105 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>✅ AoC - Day 2 part I</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>✅ AoC - Day 2 part I</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>✅ Advent of Code - Day 2 part I</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part2.html" class="homeLink">→ Part II</a>
-        <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            let safeReportsSum = 0;
+	<h1>✅ Advent of Code - Day 2 part I</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part2.html" class="homeLink">→ Part II</a>
+		<textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			let safeReportsSum = 0;
 
-            async function strParse() {
-                safeReportsSum = 0; // Reset the sum
-                const inputSrc = document.getElementById('input').value;
-                
-                const expectedResult = async () => {
-                    const url = "https://advent.fly.dev/solve/2024/2/1";
-                    const headers = {
-                        "Accept": "text/plain",
-                        "Content-Type": "text/plain"
-                    };
-                    const data = inputSrc;
+			async function strParse() {
+				safeReportsSum = 0; // Reset the sum
+				const inputSrc = document.getElementById('input').value;
 
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: data
-                        });
+				const expectedResult = async () => {
+					const url = "https://advent.fly.dev/solve/2024/2/1";
+					const headers = {
+						"Accept": "text/plain",
+						"Content-Type": "text/plain"
+					};
+					const data = inputSrc;
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
+					try {
+						const response = await fetch(url, {
+							method: "POST",
+							headers: headers,
+							body: data
+						});
 
-                        return await response.text();
-                    } catch (error) {
-                        console.error("Error:", error.message);
-                        return null;
-                    }
-                };
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
 
-                const expectedAnswer =  await expectedResult();
+						return await response.text();
+					} catch (error) {
+						console.error("Error:", error.message);
+						return null;
+					}
+				};
 
-                // Split the input into lines
-                const strArr = inputSrc.split('\n');
+				const expectedAnswer = await expectedResult();
 
-                // Parse each line into an array of numbers
-                const arrayOfArrays = strArr.map(line => 
-                    line.trim().split(/\s+/).map(num => parseInt(num, 10))
-                );
+				// Split the input into lines
+				const strArr = inputSrc.split('\n');
 
-                function isSafeReport(arr) {
-                    if (arr.length < 2) return true; // Single element or empty array is safe
+				// Parse each line into an array of numbers
+				const arrayOfArrays = strArr.map(line =>
+					line.trim().split(/\s+/).map(num => parseInt(num, 10))
+				);
 
-                    let isIncreasing = null; // Track direction (null initially)
+				function isSafeReport(arr) {
+					if (arr.length < 2) return true; // Single element or empty array is safe
 
-                    for (let i = 1; i < arr.length; i++) {
-                        const diff = arr[i] - arr[i - 1];
+					let isIncreasing = null; // Track direction (null initially)
 
-                        if (diff < -3 || diff > 3 || diff === 0) {
-                            // Difference not within allowed range or no change
-                            return false;
-                        }
+					for (let i = 1; i < arr.length; i++) {
+						const diff = arr[i] - arr[i - 1];
 
-                        // Determine direction
-                        if (isIncreasing === null) {
-                            isIncreasing = diff > 0; // First direction
-                        } else if ((isIncreasing && diff < 0) || (!isIncreasing && diff > 0)) {
-                            // Direction change detected
-                            return false;
-                        }
-                    }
+						if (diff < -3 || diff > 3 || diff === 0) {
+							// Difference not within allowed range or no change
+							return false;
+						}
 
-                    return true;
-                }
+						// Determine direction
+						if (isIncreasing === null) {
+							isIncreasing = diff > 0; // First direction
+						} else if ((isIncreasing && diff < 0) || (!isIncreasing && diff > 0)) {
+							// Direction change detected
+							return false;
+						}
+					}
 
-                // Count safe reports
-                arrayOfArrays.forEach(innerArray => {
-                    if (isSafeReport(innerArray)) {
-                        safeReportsSum++;
-                    }
-                });
+					return true;
+				}
 
-                if (safeReportsSum != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + safeReportsSum + "). The correct answer was " + expectedAnswer);
-                } else {
-                    resultDisplay(safeReportsSum);
-                }
-            }
-        </script>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+				// Count safe reports
+				arrayOfArrays.forEach(innerArray => {
+					if (isSafeReport(innerArray)) {
+						safeReportsSum++;
+					}
+				});
+
+				if (safeReportsSum != expectedAnswer) {
+					resultDisplay("Your result is incorrect (" + safeReportsSum + "). The correct answer was " + expectedAnswer);
+				} else {
+					resultDisplay(safeReportsSum);
+				}
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>

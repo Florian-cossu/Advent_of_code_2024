@@ -1,166 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>AoC - Day 9 part II</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <script src="../lib/js/debug_console.js" defer></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <link rel="stylesheet" href="../Style/debug_console.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>AoC - Day 9 part II</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Advent of Code - Day 9 part II</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part1.html" class="homeLink">→ Part I</a>
-        <textarea id="input" placeholder="Enter your input here..."></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            let result = 0;
-            let indexedDisk = [];
-            let filesIndex = [];
-            let spacesIndex = [];
-    
-            function diskDefrag(disk, fileIndexes, spaceIndexes) {
-              // Reorder furthest right hand file with furthest left hand space with matching slots
-            }
-    
-            function diskIndexer(arr) {
-                let spaceIndex = 0;
-                let diskIndex = 0;
+	<h1>Advent of Code - Day 9 part II</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part1.html" class="homeLink">→ Part I</a>
+		<textarea id="input" placeholder="Enter your input here..."></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			let result = 0;
+			let indexedDisk = [];
+			let filesIndex = [];
+			let spacesIndex = [];
 
-                for (let i = 0; i < arr.length; ) {
-                    let start = i;
-                    let end = i;
+			function diskDefrag(disk, fileIndexes, spaceIndexes) {
+				// Reorder furthest right hand file with furthest left hand space with matching slots
+			}
 
-                    if (arr[i] === ".") {
-                        // Initialize the array if not already
-                        if (!spacesIndex[spaceIndex]) spacesIndex[spaceIndex] = [];
-                        // It's a space range
-                        while (end < arr.length && arr[end] === ".") {
-                            end++;
-                        }
-                        if (!spacesIndex[spaceIndex][0]) spacesIndex[spaceIndex].push([start, end - 1]);
-                        spaceIndex++;
-                    } else {
-                        diskIndex = parseInt(arr[i]);
-                        // Initialize the array if not already
-                        if (!filesIndex[diskIndex]) filesIndex[diskIndex] = [];
-                        // It's a number range
-                        while (end < arr.length && arr[end] !== ".") {
-                            end++;
-                        }
-                        if (!filesIndex[diskIndex][0]) filesIndex[diskIndex].push([start, end - 1]);
-                        diskIndex++;
-                    }
+			function diskIndexer(arr) {
+				let spaceIndex = 0;
+				let diskIndex = 0;
 
-                    i = end; // Move the index to the next unprocessed element
-                }
-            }
+				for (let i = 0; i < arr.length;) {
+					let start = i;
+					let end = i;
 
-            async function strParse() {
-              result = 0;
-    
-              const inputSrc = document.getElementById("input").value.trim();
-    
-              const expectedResult = async () => {
-                const url = "https://advent.fly.dev/solve/2024/9/2";
-                const headers = {
-                  Accept: "text/plain",
-                  "Content-Type": "text/plain",
-                };
-                const data = inputSrc;
-    
-                try {
-                  const response = await fetch(url, {
-                    method: "POST",
-                    headers: headers,
-                    body: data,
-                  });
-    
-                  if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                  }
-    
-                  return await response.text();
-                } catch (error) {
-                  console.error("Error:", error.message);
-                  return null;
-                }
-              };
-    
-              const expectedAnswer = await expectedResult();
-    
-              let iterator = 0;
-    
-              let stringToArray = Array.from(inputSrc);
-    
-              let diskContent = [];
-    
-              for (let i = 0; i < stringToArray.length; i++) {
-                if (i % 2 === 0) {
-                  for (let j = 0; j < parseInt(stringToArray[i]); j++) {
-                    diskContent.push(iterator.toString());
-                  }
-                  iterator++;
-                } else {
-                  for (let j = 0; j < parseInt(stringToArray[i]); j++) {
-                    diskContent.push(".");
-                  }
-                }
-              }
-    
-              // newReorder(diskContent);
+					if (arr[i] === ".") {
+						// Initialize the array if not already
+						if (!spacesIndex[spaceIndex]) spacesIndex[spaceIndex] = [];
+						// It's a space range
+						while (end < arr.length && arr[end] === ".") {
+							end++;
+						}
+						if (!spacesIndex[spaceIndex][0]) spacesIndex[spaceIndex].push([start, end - 1]);
+						spaceIndex++;
+					} else {
+						diskIndex = parseInt(arr[i]);
+						// Initialize the array if not already
+						if (!filesIndex[diskIndex]) filesIndex[diskIndex] = [];
+						// It's a number range
+						while (end < arr.length && arr[end] !== ".") {
+							end++;
+						}
+						if (!filesIndex[diskIndex][0]) filesIndex[diskIndex].push([start, end - 1]);
+						diskIndex++;
+					}
 
-              diskIndexer(diskContent);
+					i = end; // Move the index to the next unprocessed element
+				}
+			}
 
-              console.log(diskContent);
+			async function strParse() {
+				result = 0;
 
-              console.group("Outputted files");
-              console.table("File indexes", filesIndex);
-              console.table("Free space indexes", spacesIndex);
-              console.groupEnd();
+				const inputSrc = document.getElementById("input").value.trim();
+
+				const expectedResult = async () => {
+					const url = "https://advent.fly.dev/solve/2024/9/2";
+					const headers = {
+						Accept: "text/plain",
+						"Content-Type": "text/plain",
+					};
+					const data = inputSrc;
+
+					try {
+						const response = await fetch(url, {
+							method: "POST",
+							headers: headers,
+							body: data,
+						});
+
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
+
+						return await response.text();
+					} catch (error) {
+						console.error("Error:", error.message);
+						return null;
+					}
+				};
+
+				const expectedAnswer = await expectedResult();
+
+				let iterator = 0;
+
+				let stringToArray = Array.from(inputSrc);
+
+				let diskContent = [];
+
+				for (let i = 0; i < stringToArray.length; i++) {
+					if (i % 2 === 0) {
+						for (let j = 0; j < parseInt(stringToArray[i]); j++) {
+							diskContent.push(iterator.toString());
+						}
+						iterator++;
+					} else {
+						for (let j = 0; j < parseInt(stringToArray[i]); j++) {
+							diskContent.push(".");
+						}
+					}
+				}
+
+				// newReorder(diskContent);
+
+				diskIndexer(diskContent);
+
+				console.log(diskContent);
+
+				console.group("Outputted files");
+				console.table("File indexes", filesIndex);
+				console.table("Free space indexes", spacesIndex);
+				console.groupEnd();
 
 
-    
-              for (
-                let i = 0;
-                i < diskContent.length && diskContent[i] !== ".";
-                i++
-              ) {
-                result += i * parseInt(diskContent[i]);
-              }
-    
-              if (result != expectedAnswer) {
-                resultDisplay(
-                  "Your result is incorrect (" +
-                    result +
-                    "). The correct answer was " +
-                    expectedAnswer +
-                    "\n\n" +
-                    JSON.stringify(
-                      {
-                        result: result,
-                        expected_result: expectedAnswer,
-                        delta: Math.abs(result - expectedAnswer),
-                      },
-                      null,
-                      2
-                    )
-                );
-              } else {
-                resultDisplay(result);
-              }
-            }
-          </script>
-        <div id="debugConsole">
-            <!-- Debug console display -->
-        </div>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+
+				for (
+					let i = 0;
+					i < diskContent.length && diskContent[i] !== ".";
+					i++
+				) {
+					result += i * parseInt(diskContent[i]);
+				}
+
+				if (result != expectedAnswer) {
+					resultDisplay(
+						"Your result is incorrect (" +
+						result +
+						"). The correct answer was " +
+						expectedAnswer +
+						"\n\n" +
+						JSON.stringify(
+							{
+								result: result,
+								expected_result: expectedAnswer,
+								delta: Math.abs(result - expectedAnswer),
+							},
+							null,
+							2
+						)
+					);
+				} else {
+					resultDisplay(result);
+				}
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>

@@ -1,121 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>✅ AoC - Day 4 part I</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>✅ AoC - Day 4 part I</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>✅ Advent of Code - Day 4 part I</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part2.html" class="homeLink">→ Part II</a>
-        <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            function matrixWordCheck (x, y, arr) {
-                let xmasOccurences = 0;
+	<h1>✅ Advent of Code - Day 4 part I</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part2.html" class="homeLink">→ Part II</a>
+		<textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			function matrixWordCheck(x, y, arr) {
+				let xmasOccurences = 0;
 
-                // Horizontal checks
-                // If X position permits, check along X to rightwards
-                if (x <= arr[y].length -4) {
-                    (arr[y][x+1] == "M" && arr[y][x+2] == "A" && arr[y][x+3] == "S") ? xmasOccurences++ : null;
-                }
+				// Horizontal checks
+				// If X position permits, check along X to rightwards
+				if (x <= arr[y].length - 4) {
+					(arr[y][x + 1] == "M" && arr[y][x + 2] == "A" && arr[y][x + 3] == "S") ? xmasOccurences++ : null;
+				}
 
-                // If X position permits, check along X to leftwards
-                if (x >= 3) {
-                    (arr[y][x-1] == "M" && arr[y][x-2] == "A" && arr[y][x-3] == "S") ? xmasOccurences++ : null;
-                }
+				// If X position permits, check along X to leftwards
+				if (x >= 3) {
+					(arr[y][x - 1] == "M" && arr[y][x - 2] == "A" && arr[y][x - 3] == "S") ? xmasOccurences++ : null;
+				}
 
-                // Vertical checks
-                // If Y position permits, check along Y axis downwards
-                if (y <= arr.length - 4) {
-                    (arr[y+1][x] == "M" && arr[y+2][x] == "A" && arr[y+3][x] == "S") ? xmasOccurences++ : null;
-                }
+				// Vertical checks
+				// If Y position permits, check along Y axis downwards
+				if (y <= arr.length - 4) {
+					(arr[y + 1][x] == "M" && arr[y + 2][x] == "A" && arr[y + 3][x] == "S") ? xmasOccurences++ : null;
+				}
 
-                // If Y position permits, check along Y axis upwards
-                if (y >= 3) {
-                    (arr[y-1][x] == "M" && arr[y-2][x] == "A" && arr[y-3][x] == "S") ? xmasOccurences++ : null;
-                }
+				// If Y position permits, check along Y axis upwards
+				if (y >= 3) {
+					(arr[y - 1][x] == "M" && arr[y - 2][x] == "A" && arr[y - 3][x] == "S") ? xmasOccurences++ : null;
+				}
 
-                // Diagonal checks
-                // If X,Y position permits, check along X rightwards and Y upwards
-                if (x <= arr[y].length -4 && y >= 3) {
-                    (arr[y-1][x+1] == "M" && arr[y-2][x+2] == "A" && arr[y-3][x+3] == "S") ? xmasOccurences++ : null;
-                }
+				// Diagonal checks
+				// If X,Y position permits, check along X rightwards and Y upwards
+				if (x <= arr[y].length - 4 && y >= 3) {
+					(arr[y - 1][x + 1] == "M" && arr[y - 2][x + 2] == "A" && arr[y - 3][x + 3] == "S") ? xmasOccurences++ : null;
+				}
 
-                // If X,Y position permits, check along X rightwards and Y downwards
-                if (x <= arr[y].length -4 && y <= arr.length - 4) {
-                    (arr[y+1][x+1] == "M" && arr[y+2][x+2] == "A" && arr[y+3][x+3] == "S") ? xmasOccurences++ : null;
-                }
+				// If X,Y position permits, check along X rightwards and Y downwards
+				if (x <= arr[y].length - 4 && y <= arr.length - 4) {
+					(arr[y + 1][x + 1] == "M" && arr[y + 2][x + 2] == "A" && arr[y + 3][x + 3] == "S") ? xmasOccurences++ : null;
+				}
 
-                // If X,Y position permits, check along X leftwards and Y upwards
-                if (x >= 3 && y >= 3) {
-                    (arr[y-1][x-1] == "M" && arr[y-2][x-2] == "A" && arr[y-3][x-3] == "S") ? xmasOccurences++ : null;
-                }
+				// If X,Y position permits, check along X leftwards and Y upwards
+				if (x >= 3 && y >= 3) {
+					(arr[y - 1][x - 1] == "M" && arr[y - 2][x - 2] == "A" && arr[y - 3][x - 3] == "S") ? xmasOccurences++ : null;
+				}
 
-                // If X,Y position permits, check along X leftwards and Y downwards
-                if (x >= 3 && y <= arr.length - 4) {
-                    (arr[y+1][x-1] == "M" && arr[y+2][x-2] == "A" && arr[y+3][x-3] == "S") ? xmasOccurences++ : null;
-                }
-                
-                return xmasOccurences;
-            }
+				// If X,Y position permits, check along X leftwards and Y downwards
+				if (x >= 3 && y <= arr.length - 4) {
+					(arr[y + 1][x - 1] == "M" && arr[y + 2][x - 2] == "A" && arr[y + 3][x - 3] == "S") ? xmasOccurences++ : null;
+				}
 
-            async function strParse() {
-                let xmasCount = 0;
-                const inputSrc = document.getElementById('input').value;
+				return xmasOccurences;
+			}
 
-                const expectedResult = async () => {
-                    const url = "https://advent.fly.dev/solve/2024/4/1";
-                    const headers = {
-                        "Accept": "text/plain",
-                        "Content-Type": "text/plain"
-                    };
-                    const data = inputSrc;
+			async function strParse() {
+				let xmasCount = 0;
+				const inputSrc = document.getElementById('input').value;
 
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: data
-                        });
+				const expectedResult = async () => {
+					const url = "https://advent.fly.dev/solve/2024/4/1";
+					const headers = {
+						"Accept": "text/plain",
+						"Content-Type": "text/plain"
+					};
+					const data = inputSrc;
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
+					try {
+						const response = await fetch(url, {
+							method: "POST",
+							headers: headers,
+							body: data
+						});
 
-                        return await response.text();
-                    } catch (error) {
-                        console.error("Error:", error.message);
-                        return null;
-                    }
-                };
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
 
-                const expectedAnswer =  await expectedResult();
+						return await response.text();
+					} catch (error) {
+						console.error("Error:", error.message);
+						return null;
+					}
+				};
 
-                const strArr = inputSrc.split('\n');
-                const arrayOfLetters = strArr.map(line => line.trim().split(''));
+				const expectedAnswer = await expectedResult();
 
-                for (let y = 0; y < arrayOfLetters.length; y++) {
-                    for (let x = 0; x < arrayOfLetters[y].length; x++) {
-                        xmasCount += (arrayOfLetters[y][x] == "X" ? matrixWordCheck(x, y, arrayOfLetters) : 0);
-                    }
-                }
+				const strArr = inputSrc.split('\n');
+				const arrayOfLetters = strArr.map(line => line.trim().split(''));
 
-                if (xmasCount != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + xmasCount + "). The correct answer was " + expectedAnswer);
-                } else {
-                    resultDisplay(xmasCount);
-                }
-            }
-        </script>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+				for (let y = 0; y < arrayOfLetters.length; y++) {
+					for (let x = 0; x < arrayOfLetters[y].length; x++) {
+						xmasCount += (arrayOfLetters[y][x] == "X" ? matrixWordCheck(x, y, arrayOfLetters) : 0);
+					}
+				}
+
+				if (xmasCount != expectedAnswer) {
+					resultDisplay("Your result is incorrect (" + xmasCount + "). The correct answer was " + expectedAnswer);
+				} else {
+					resultDisplay(xmasCount);
+				}
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>

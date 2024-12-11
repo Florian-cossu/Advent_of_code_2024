@@ -1,81 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>✅ AoC - Day 4 part II</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>✅ AoC - Day 4 part II</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>✅ Advent of Code - Day 4 part II</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part1.html" class="homeLink">→ Part I</a>
-        <textarea id="input" placeholder="Enter your input here"></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            function matrixWordCheck (x, y, arr) {
-                let crossedMasOccurences = 0;
+	<h1>✅ Advent of Code - Day 4 part II</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part1.html" class="homeLink">→ Part I</a>
+		<textarea id="input" placeholder="Enter your input here"></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			function matrixWordCheck(x, y, arr) {
+				let crossedMasOccurences = 0;
 
-                ((arr[y-1][x-1] == "M" && arr[y+1][x+1] == "S" || arr[y-1][x-1] == "S" && arr[y+1][x+1] == "M" ) && (arr[y-1][x+1] == "M" && arr[y+1][x-1] == "S" || arr[y-1][x+1] == "S" && arr[y+1][x-1] == "M" ) )? crossedMasOccurences++ : null;
+				((arr[y - 1][x - 1] == "M" && arr[y + 1][x + 1] == "S" || arr[y - 1][x - 1] == "S" && arr[y + 1][x + 1] == "M") && (arr[y - 1][x + 1] == "M" && arr[y + 1][x - 1] == "S" || arr[y - 1][x + 1] == "S" && arr[y + 1][x - 1] == "M")) ? crossedMasOccurences++ : null;
 
-                
-                return crossedMasOccurences;
-            }
 
-            async function strParse() {
-                let crossedMasCount = 0;
-                const inputSrc = document.getElementById('input').value;
+				return crossedMasOccurences;
+			}
 
-                const expectedResult = async () => {
-                    const url = "https://advent.fly.dev/solve/2024/4/2";
-                    const headers = {
-                        "Accept": "text/plain",
-                        "Content-Type": "text/plain"
-                    };
-                    const data = inputSrc;
+			async function strParse() {
+				let crossedMasCount = 0;
+				const inputSrc = document.getElementById('input').value;
 
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: data
-                        });
+				const expectedResult = async () => {
+					const url = "https://advent.fly.dev/solve/2024/4/2";
+					const headers = {
+						"Accept": "text/plain",
+						"Content-Type": "text/plain"
+					};
+					const data = inputSrc;
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
+					try {
+						const response = await fetch(url, {
+							method: "POST",
+							headers: headers,
+							body: data
+						});
 
-                        return await response.text();
-                    } catch (error) {
-                        console.error("Error:", error.message);
-                        return null;
-                    }
-                };
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
 
-                const expectedAnswer =  await expectedResult();
+						return await response.text();
+					} catch (error) {
+						console.error("Error:", error.message);
+						return null;
+					}
+				};
 
-                const strArr = inputSrc.split('\n');
-                const arrayOfLetters = strArr.map(line => line.trim().split(''));
+				const expectedAnswer = await expectedResult();
 
-                for (let y = 1; y < arrayOfLetters.length - 1; y++) {
-                    for (let x = 1; x < arrayOfLetters[y].length - 1; x++) {
-                        crossedMasCount += (arrayOfLetters[y][x] == "A" ? matrixWordCheck(x, y, arrayOfLetters) : 0);
-                    }
-                }
+				const strArr = inputSrc.split('\n');
+				const arrayOfLetters = strArr.map(line => line.trim().split(''));
 
-                if (crossedMasCount != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + crossedMasCount + "). The correct answer was " + expectedAnswer);
-                } else {
-                    resultDisplay(crossedMasCount);
-                }
-            }
-        </script>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+				for (let y = 1; y < arrayOfLetters.length - 1; y++) {
+					for (let x = 1; x < arrayOfLetters[y].length - 1; x++) {
+						crossedMasCount += (arrayOfLetters[y][x] == "A" ? matrixWordCheck(x, y, arrayOfLetters) : 0);
+					}
+				}
+
+				if (crossedMasCount != expectedAnswer) {
+					resultDisplay("Your result is incorrect (" + crossedMasCount + "). The correct answer was " + expectedAnswer);
+				} else {
+					resultDisplay(crossedMasCount);
+				}
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>

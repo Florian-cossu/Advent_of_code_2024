@@ -1,207 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>AoC - Day 6 part I</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>AoC - Day 6 part I</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Advent of Code - Day 6 part I</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part2.html" class="homeLink">→ Part II</a>
-        <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            let directionCheckExec = 0;
+	<h1>Advent of Code - Day 6 part I</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part2.html" class="homeLink">→ Part II</a>
+		<textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			let directionCheckExec = 0;
 
-            function directionCheck(arr, dir, line, column) {
-                directionCheckExec++;
-                let movesCount = 0;
+			function directionCheck(arr, dir, line, column) {
+				directionCheckExec++;
+				let movesCount = 0;
 
-                if (dir === "up") {
-                    while (line >= 0) {
-                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (line == 0) {
-                            break;
-                        } else if (arr[line - 1][column] && arr[line-1][column] === "#") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                            break;
-                        } else if (arr[line][column] !== "X") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                        }
-                        line--;
-                    }
-                    dir = "right";
-                } else if (dir === "right") {
-                    while (column <= arr[line].length - 1) {
-                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (column == arr[line].length - 1) {
-                            break;
-                        } else if (arr[line][column+1] && arr[line][column+1] === "#") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                            break;
-                        } else if (arr[line][column] !== "X") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                        }
-                        column++;
-                    }
-                    dir = "down";
-                } else if (dir === "down") {
-                    while (line <= arr.length - 1) {
-                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (line == arr.length - 1) {
-                            break;
-                        } else if (arr[line+1][column] && arr[line+1][column] === "#") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                            break;
-                        } else if (arr[line][column] !== "X") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                        }
-                        line++;
-                    }
-                    dir = "left";
-                } else if (dir === "left") {
-                    while (column >= 0) {
-                        // console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
-                        if (column == 0) {
-                            break;
-                        } else if (arr[line][column-1] && arr[line][column-1] === "#") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                            break;
-                        } else if (arr[line][column] !== "X") {
-                            arr[line][column] = "X";
-                            movesCount++;
-                        }
-                        column--;
-                    }
-                    dir = "up";
-                }
+				if (dir === "up") {
+					while (line >= 0) {
+						// console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+						if (line == 0) {
+							break;
+						} else if (
+							arr[line - 1][column] &&
+							arr[line - 1][column] === "#"
+						) {
+							arr[line][column] = "X";
+							movesCount++;
+							break;
+						} else if (arr[line][column] !== "X") {
+							arr[line][column] = "X";
+							movesCount++;
+						}
+						line--;
+					}
+					dir = "right";
+				} else if (dir === "right") {
+					while (column <= arr[line].length - 1) {
+						// console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+						if (column == arr[line].length - 1) {
+							break;
+						} else if (
+							arr[line][column + 1] &&
+							arr[line][column + 1] === "#"
+						) {
+							arr[line][column] = "X";
+							movesCount++;
+							break;
+						} else if (arr[line][column] !== "X") {
+							arr[line][column] = "X";
+							movesCount++;
+						}
+						column++;
+					}
+					dir = "down";
+				} else if (dir === "down") {
+					while (line <= arr.length - 1) {
+						// console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+						if (line == arr.length - 1) {
+							break;
+						} else if (
+							arr[line + 1][column] &&
+							arr[line + 1][column] === "#"
+						) {
+							arr[line][column] = "X";
+							movesCount++;
+							break;
+						} else if (arr[line][column] !== "X") {
+							arr[line][column] = "X";
+							movesCount++;
+						}
+						line++;
+					}
+					dir = "left";
+				} else if (dir === "left") {
+					while (column >= 0) {
+						// console.log(`Checking line ${line} column ${column}: content is "${arr[line][column]}". Looking ${dir}wards`);
+						if (column == 0) {
+							break;
+						} else if (
+							arr[line][column - 1] &&
+							arr[line][column - 1] === "#"
+						) {
+							arr[line][column] = "X";
+							movesCount++;
+							break;
+						} else if (arr[line][column] !== "X") {
+							arr[line][column] = "X";
+							movesCount++;
+						}
+						column--;
+					}
+					dir = "up";
+				}
 
-                return [dir, line, column, movesCount];
-            }
+				return [dir, line, column, movesCount];
+			}
 
-            async function strParse() {
-                let result = 0;
-                let startPos = [0, 0];
-                let movingCoordinates = [0, 0];
-                let dir = "up";
+			async function strParse() {
+				let result = 0;
+				let startPos = [0, 0];
+				let movingCoordinates = [0, 0];
+				let dir = "up";
 
-                const inputSrc = document.getElementById("input").value;
+				const inputSrc = document.getElementById("input").value;
 
-                // Parse and validate input
-                const strArr = inputSrc.split("\n");
+				// Parse and validate input
+				const strArr = inputSrc.split("\n");
 
-                const expectedResult = async () => {
-                    const url = "https://advent.fly.dev/solve/2024/6/1";
-                    const headers = {
-                        "Accept": "text/plain",
-                        "Content-Type": "text/plain"
-                    };
-                    const data = inputSrc;
+				const expectedResult = async () => {
+					const url = "https://advent.fly.dev/solve/2024/6/1";
+					const headers = {
+						Accept: "text/plain",
+						"Content-Type": "text/plain",
+					};
+					const data = inputSrc;
 
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: data
-                        });
+					try {
+						const response = await fetch(url, {
+							method: "POST",
+							headers: headers,
+							body: data,
+						});
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
 
-                        return await response.text();
-                    } catch (error) {
-                        console.error("Error:", error.message);
-                        return null;
-                    }
-                };
+						return await response.text();
+					} catch (error) {
+						console.error("Error:", error.message);
+						return null;
+					}
+				};
 
-                const expectedAnswer =  await expectedResult();
+				const expectedAnswer = await expectedResult();
 
-                const map = strArr.filter(line => line.trim() !== "").map(line => line.trim().split(""));
+				const map = strArr
+					.filter((line) => line.trim() !== "")
+					.map((line) => line.trim().split(""));
 
-                if (map.length === 0) {
-                    console.error("Input is empty or invalid.");
-                    resultDisplay("Error: Input is empty or invalid.");
-                    return;
-                }
+				if (map.length === 0) {
+					console.error("Input is empty or invalid.");
+					resultDisplay("Error: Input is empty or invalid.");
+					return;
+				}
 
-                // Locate start position
-                for (let line = 0; line < map.length; line++) {
-                    for (let column = 0; column < map[line].length; column++) {
-                        if (map[line][column] === "^") {
-                            startPos = [line, column];
-                            movingCoordinates = [line, column];
-                            break;
-                        }
-                    }
-                }
+				// Locate start position
+				for (let line = 0; line < map.length; line++) {
+					for (let column = 0; column < map[line].length; column++) {
+						if (map[line][column] === "^") {
+							startPos = [line, column];
+							movingCoordinates = [line, column];
+							break;
+						}
+					}
+				}
 
-                if (startPos.length === 0) {
-                    console.error("Start position not found");
-                    resultDisplay("Error: Start position not found");
-                    return;
-                }
+				if (startPos.length === 0) {
+					console.error("Start position not found");
+					resultDisplay("Error: Start position not found");
+					return;
+				}
 
-                console.log({ start_y: startPos[0], start_x: startPos[1], map });
+				console.log({ start_y: startPos[0], start_x: startPos[1], map });
 
-                // Main logic
-                do {
-                    let moves = 0;
-                    let [y, x] = [movingCoordinates[0], movingCoordinates[1]];
+				// Main logic
+				do {
+					let moves = 0;
+					let [y, x] = [movingCoordinates[0], movingCoordinates[1]];
 
-                    [dir, movingCoordinates[0], movingCoordinates[1], moves] = directionCheck(
-                        map,
-                        dir,
-                        y,
-                        x
-                    );
+					[dir, movingCoordinates[0], movingCoordinates[1], moves] =
+						directionCheck(map, dir, y, x);
 
-                    if (moves === 0) {
-                        console.warn("No further moves possible. Terminating.");
-                        break;
-                    } else if (movingCoordinates[0] == 0 || movingCoordinates[1] == 0 || movingCoordinates[0] == map.length - 1 || movingCoordinates[1] == map[movingCoordinates[0]].length - 1) {
-                        result += moves;
-                        break;
-                    } else {
-                        result += moves;
-                    }
-                } while (
-                    movingCoordinates[0] >= 0 &&
-                    movingCoordinates[0] < map.length &&
-                    movingCoordinates[1] >= 0 &&
-                    movingCoordinates[1] < map[0].length
-                );
+					if (moves === 0) {
+						console.warn("No further moves possible. Terminating.");
+						break;
+					} else if (
+						movingCoordinates[0] == 0 ||
+						movingCoordinates[1] == 0 ||
+						movingCoordinates[0] == map.length - 1 ||
+						movingCoordinates[1] == map[movingCoordinates[0]].length - 1
+					) {
+						result += moves;
+						break;
+					} else {
+						result += moves;
+					}
+				} while (
+					movingCoordinates[0] >= 0 &&
+					movingCoordinates[0] < map.length &&
+					movingCoordinates[1] >= 0 &&
+					movingCoordinates[1] < map[0].length
+				);
 
-                if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
-                        result: result,
-                        expected_result: expectedAnswer,
-                        delta: Math.abs(result - expectedAnswer),
-                        direction_check_count: directionCheckExec,
-                        result_minus_check_execs: result - directionCheckExec}, null, 2));
-                } else {
-                    resultDisplay(result);
-                }
+				if (result != expectedAnswer) {
+					resultDisplay(
+						"Your result is incorrect (" +
+						result +
+						"). The correct answer was " +
+						expectedAnswer +
+						"\n\n" +
+						JSON.stringify(
+							{
+								result: result,
+								expected_result: expectedAnswer,
+								delta: Math.abs(result - expectedAnswer),
+								direction_check_count: directionCheckExec,
+								result_minus_check_execs: result - directionCheckExec,
+							},
+							null,
+							2
+						)
+					);
+				} else {
+					resultDisplay(result);
+				}
 
-                map.length <= 10 && [0].length <= 10 ? console.log(map) : null;
-            }
-        </script>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+				map.length <= 10 && [0].length <= 10 ? console.log(map) : null;
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>

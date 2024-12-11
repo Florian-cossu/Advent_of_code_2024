@@ -1,109 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>AoC - Day 6 part II</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>AoC - Day 6 part II</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Advent of Code - Day 6 part II</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part1.html" class="homeLink">→ Part I</a>
-        <textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            function strParse() {
-                let result = 0;
+	<h1>Advent of Code - Day 6 part II</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part1.html" class="homeLink">→ Part I</a>
+		<textarea id="input" placeholder="Enter your input here (e.g., '7 6 4 2 1\n1 2 7 8 9')"></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			function strParse() {
+				let result = 0;
 
-                const inputSrc = document.getElementById('input').value;
-                const strArr = inputSrc.split('\n');
+				const inputSrc = document.getElementById('input').value;
+				const strArr = inputSrc.split('\n');
 
-                let pageOrderingRules = {};
-                let pagesToUpdate = [];
-                let pagesToReorder = [];
+				let pageOrderingRules = {};
+				let pagesToUpdate = [];
+				let pagesToReorder = [];
 
-                strArr.forEach(line => {
-                    if (line.match(/\|/)) {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
+				strArr.forEach(line => {
+					if (line.match(/\|/)) {
+						let [left, right] = line.split(/\|/);
+						let key = left.trim();
 
-                        // Ensure the key exists in the object
-                        if (!pageOrderingRules[key]) {
-                            pageOrderingRules[key] = [];
-                        }
+						// Ensure the key exists in the object
+						if (!pageOrderingRules[key]) {
+							pageOrderingRules[key] = [];
+						}
 
-                        pageOrderingRules[key].push(right.trim());
-                    } else if (line.match(/,/)) {
-                        let pagesArray = line.split(/,/).map(page => page.trim());
-                        pagesToUpdate.push(pagesArray);
-                    }
-                });
+						pageOrderingRules[key].push(right.trim());
+					} else if (line.match(/,/)) {
+						let pagesArray = line.split(/,/).map(page => page.trim());
+						pagesToUpdate.push(pagesArray);
+					}
+				});
 
-                for (let line = 0; line < pagesToUpdate.length; line++) {
-                    for (let page = 0; page < pagesToUpdate[line].length; page++) {
-                        for (let i = page + 1; i < pagesToUpdate[line].length; i++) {
-                        /*
-                            console.log(
-                                `Line: ${line}, page: ${pagesToUpdate[line][page]}, checking if ${pagesToUpdate[line][i]} is in ${pagesToUpdate[line][page]}'s array: ${pageOrderingRules[pagesToUpdate[line][page]]}`
-                            );
-                        */
+				for (let line = 0; line < pagesToUpdate.length; line++) {
+					for (let page = 0; page < pagesToUpdate[line].length; page++) {
+						for (let i = page + 1; i < pagesToUpdate[line].length; i++) {
+							/*
+								console.log(
+									`Line: ${line}, page: ${pagesToUpdate[line][page]}, checking if ${pagesToUpdate[line][i]} is in ${pagesToUpdate[line][page]}'s array: ${pageOrderingRules[pagesToUpdate[line][page]]}`
+								);
+							*/
 
-                            // Get the array from pageOrderingRules for the current page
-                            const ruleArray = pageOrderingRules[pagesToUpdate[line][page]] || [];
+							// Get the array from pageOrderingRules for the current page
+							const ruleArray = pageOrderingRules[pagesToUpdate[line][page]] || [];
 
-                            if (!ruleArray.includes(pagesToUpdate[line][i])) {
-                                pagesToReorder.push(pagesToUpdate[line]);
-                                pagesToUpdate.splice(line, 1);
-                                line--; // Adjust index to account for removal
-                                break;
-                            }
-                        }
-                    }
-                }
+							if (!ruleArray.includes(pagesToUpdate[line][i])) {
+								pagesToReorder.push(pagesToUpdate[line]);
+								pagesToUpdate.splice(line, 1);
+								line--; // Adjust index to account for removal
+								break;
+							}
+						}
+					}
+				}
 
-                for (let line = 0; line < pagesToReorder.length; line++) {
-                    let reorderedLine = [];
+				for (let line = 0; line < pagesToReorder.length; line++) {
+					let reorderedLine = [];
 
-                    for (let page = 0; page < pagesToReorder[line].length; page++) {
-                        for (let i = page + 1; i < pagesToReorder[line].length; i++) {
-                            // Get the array from pageOrderingRules for the current page
-                            const ruleArray = pageOrderingRules[pagesToReorder[line][page]] || [];
+					for (let page = 0; page < pagesToReorder[line].length; page++) {
+						for (let i = page + 1; i < pagesToReorder[line].length; i++) {
+							// Get the array from pageOrderingRules for the current page
+							const ruleArray = pageOrderingRules[pagesToReorder[line][page]] || [];
 
-                            if (!ruleArray.includes(pagesToReorder[line][i])) {
-                                [pagesToReorder[line][page], pagesToReorder[line][i]] = [pagesToReorder[line][i], pagesToReorder[line][page]];
-                            }
-                        }
-                    }
-                }
+							if (!ruleArray.includes(pagesToReorder[line][i])) {
+								[pagesToReorder[line][page], pagesToReorder[line][i]] = [pagesToReorder[line][i], pagesToReorder[line][page]];
+							}
+						}
+					}
+				}
 
-                for (let line = 0; line < pagesToReorder.length; line++) {
-                    const arr = pagesToReorder[line];
-                    var middle = [...arr].reverse().reduce((c, v, i) => {
-                    if (v === arr[i]) c = v;
-                    return c;
-                    }, null);
+				for (let line = 0; line < pagesToReorder.length; line++) {
+					const arr = pagesToReorder[line];
+					var middle = [...arr].reverse().reduce((c, v, i) => {
+						if (v === arr[i]) c = v;
+						return c;
+					}, null);
 
-                    result += parseInt(middle, 10);
-                }
-            
-            /*
-                console.log({
-                    page_ordering_rules: pageOrderingRules,
-                    pages_to_update: pagesToUpdate,
-                    pages_to_reorder: pagesToReorder
-                });
-            */
+					result += parseInt(middle, 10);
+				}
 
-                resultDisplay(result); // Display the result
-            }
-        </script>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+				/*
+					console.log({
+						page_ordering_rules: pageOrderingRules,
+						pages_to_update: pagesToUpdate,
+						pages_to_reorder: pagesToReorder
+					});
+				*/
+
+				resultDisplay(result); // Display the result
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>

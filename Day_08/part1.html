@@ -1,81 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>AoC - Day 8 part I</title>
-    <script src="../lib/js/resultDisplay.js"></script>
-    <link rel="stylesheet" href="../Style/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<title>AoC - Day 8 part I</title>
+	<script src="../lib/js/resultDisplay.js"></script>
+	<script src="../lib/js/debug_console.js" defer></script>
+	<link rel="stylesheet" href="../Style/style.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Advent of Code - Day 8 part I</h1>
-    <div id="card">
-        <a href="../index.html" class="homeLink">→ Home</a>
-        <a href="part2.html" class="homeLink">→ Part II</a>
-        <textarea id="input" placeholder="Enter your input here..."></textarea>
-        <button class="button" type="button" onclick="strParse()">Test</button>
-        <script>
-            async function strParse() {
-                let result = 0;
+	<h1>Advent of Code - Day 8 part I</h1>
+	<div id="card">
+		<a href="../index.html" class="homeLink">→ Home</a>
+		<a href="part2.html" class="homeLink">→ Part II</a>
+		<textarea id="input" placeholder="Enter your input here..."></textarea>
+		<button class="button" type="button" onclick="strParse()">Test</button>
+		<script>
+			async function strParse() {
+				let result = 0;
 
-                const inputSrc = document.getElementById("input").value;
+				const inputSrc = document.getElementById("input").value;
 
-                // Parse and validate input
-                const strArr = inputSrc.split("\n");
+				// Parse and validate input
+				const strArr = inputSrc.split("\n");
 
-                strArr.forEach(line => {
-                        let [left, right] = line.split(/\|/);
-                        let key = left.trim();
+				strArr.forEach((line) => {
+					let [left, right] = line.split(/\|/);
+					let key = left.trim();
 
-                        pageOrderingRules[key].push(right.trim());
-                });
+					pageOrderingRules[key].push(right.trim());
+				});
 
-                const expectedResult = async () => {
-                    const url = "https://advent.fly.dev/solve/2024/8/1";
-                    const headers = {
-                        "Accept": "text/plain",
-                        "Content-Type": "text/plain"
-                    };
-                    const data = inputSrc;
+				const expectedResult = async () => {
+					const url = "https://advent.fly.dev/solve/2024/8/1";
+					const headers = {
+						Accept: "text/plain",
+						"Content-Type": "text/plain",
+					};
+					const data = inputSrc;
 
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: data
-                        });
+					try {
+						const response = await fetch(url, {
+							method: "POST",
+							headers: headers,
+							body: data,
+						});
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
 
-                        return await response.text();
-                    } catch (error) {
-                        console.error("Error:", error.message);
-                        return null;
-                    }
-                };
+						return await response.text();
+					} catch (error) {
+						console.error("Error:", error.message);
+						return null;
+					}
+				};
 
-                const expectedAnswer =  await expectedResult();
+				const expectedAnswer = await expectedResult();
 
-                // CODE HERE
+				// CODE HERE
 
-                if (result != expectedAnswer) {
-                    resultDisplay("Your result is incorrect (" + result + "). The correct answer was " + expectedAnswer + "\n\n" + JSON.stringify({
-                        result: result,
-                        expected_result: expectedAnswer,
-                        delta: Math.abs(result - expectedAnswer),
-                        direction_check_count: directionCheckExec,
-                        result_minus_check_execs: result - directionCheckExec}, null, 2));
-                } else {
-                    resultDisplay(result);
-                }
-            }
-        </script>
-        <div id="resultDisplay">
-            <!-- Result display -->
-        </div>
-    </div>
+				if (result != expectedAnswer) {
+					resultDisplay(
+						"Your result is incorrect (" +
+						result +
+						"). The correct answer was " +
+						expectedAnswer +
+						"\n\n" +
+						JSON.stringify(
+							{
+								result: result,
+								expected_result: expectedAnswer,
+								delta: Math.abs(result - expectedAnswer),
+								direction_check_count: directionCheckExec,
+								result_minus_check_execs: result - directionCheckExec,
+							},
+							null,
+							2
+						)
+					);
+				} else {
+					resultDisplay(result);
+				}
+			}
+		</script>
+		<div id="debugConsole">
+			<!-- Debug console display -->
+		</div>
+		<div id="resultDisplay">
+			<!-- Result display -->
+		</div>
+	</div>
 </body>
+
 </html>
