@@ -25,9 +25,48 @@
 
 			function diskDefrag(disk, fileIndexes, spaceIndexes) {
 				// Reorder furthest right hand file with furthest left hand space with matching slots
+				for (let i = filesIndex.length; i > 0; i--) {
+					let fileSize = filesIndex[i].length;
+					for (let j = 0; j < spacesIndex.length; j++) {
+						let freeSpaceSize = spacesIndex[j].length;
+						if (fileSize == freeSpaceSize) {
+							let swapStartPosition = spacesIndex[j][0];
+							let cleanStartPosition = filesIndex[i][0];
+							for (let index = 0; index < fileSize; index++) {
+								indexedDisk[swapStartPosition] = indexedDisk[fileIndexes[i][0]];
+							}
+							for (let index = 0; index < fileSize) {
+								
+							}
+						}
+					}
+				}
+			}
+
+			function freeSpaceIndexUpdate (arr) {
+				spacesIndex = [];
+				let spaceIndex = 0;
+
+				for (let i = 0; i < arr.length; i++) {
+					let start = i;
+					let end = i;
+
+					if (arr[i] === ".") {
+						// Initialize the array if not already
+						if (!spacesIndex[spaceIndex]) spacesIndex[spaceIndex] = [];
+						// It's a space range
+						while (end < arr.length && arr[end] === ".") {
+							end++;
+						}
+						if (!spacesIndex[spaceIndex][0]) spacesIndex[spaceIndex].push([start, end - 1]);
+						spaceIndex++;
+					}
+				}
 			}
 
 			function diskIndexer(arr) {
+				filesIndex = [];
+				spacesIndex = [];
 				let spaceIndex = 0;
 				let diskIndex = 0;
 
