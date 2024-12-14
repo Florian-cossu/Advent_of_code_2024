@@ -23,24 +23,45 @@
 			let filesIndex = [];
 			let spacesIndex = [];
 
-			function diskDefrag(disk, fileIndexes, spaceIndexes) {
+			function diskDefrag(disk, filesIndex, spacesIndex) {
+				console.group();
+				console.log(disk);
+				console.log("Files", filesIndex);
+				console.log("Free", spacesIndex);
+				console.groupEnd();
+
 				// Reorder furthest right hand file with furthest left hand space with matching slots
-				for (let i = filesIndex.length; i > 0; i--) {
-					let fileSize = filesIndex[i].length;
+				for (let i = filesIndex.length - 1; i > 0; i--) {
+					// console.log(filesIndex[i]);
+					let fileStart = parseInt(filesIndex[i][0]);
+					let fileEnd = (filesIndex[i][1] || parseInt(filesIndex[i][0]));
+
+					let fileSize = (fileEnd == fileStart ? 1 : (fileEnd - fileStart)+1);
+
+					 console.log(`File index: ${i}, File size: ${fileSize}, File position: ${fileStart} - ${fileEnd}`);
+
 					for (let j = 0; j < spacesIndex.length; j++) {
-						let freeSpaceSize = spacesIndex[j].length;
-						if (fileSize == freeSpaceSize) {
-							let swapStartPosition = spacesIndex[j][0];
-							let cleanStartPosition = filesIndex[i][0];
-							for (let index = 0; index < fileSize; index++) {
-								indexedDisk[swapStartPosition] = indexedDisk[fileIndexes[i][0]];
-							}
-							for (let index = 0; index < fileSize) {
-								
+						let freeStart = parseInt(spacesIndex[j][0]);
+						let freeEnd = (parseInt(spacesIndex[j][1]) || parseInt(spacesIndex[j][0]));
+
+						let freeSpaceSize = (freeEnd == freeStart ? 1 : (freeEnd - freeStart)+1);
+
+						 console.log(`Space index: ${i}, Space size: ${fileSize} Space position: ${freeStart} - ${freeEnd}`);
+
+						if (fileSize < freeSpaceSize || fileSize == freeSpaceSize) {
+							if (fileSize == 1  && freeStart < fileStart) {
+								console.log(`Space index: ${i}, Space position: ${freeStart} - ${freeEnd} will be switched with File index: ${i}, File position: ${fileStart} - ${fileEnd}`);
+								[disk[freeStart], disk[fileStart]] = [disk[fileStart], disk[freeStart]];
+								console.log(disk);
+								spacesIndex = freeSpaceIndexUpdate(disk);
+								break;
 							}
 						}
 					}
 				}
+
+				console.log("Disk defragmented successfully");
+				return disk;
 			}
 
 			function freeSpaceIndexUpdate (arr) {
@@ -62,6 +83,7 @@
 						spaceIndex++;
 					}
 				}
+				return spacesIndex;
 			}
 
 			function diskIndexer(arr) {
@@ -104,33 +126,33 @@
 
 				const inputSrc = document.getElementById("input").value.trim();
 
-				const expectedResult = async () => {
-					const url = "https://advent.fly.dev/solve/2024/9/2";
-					const headers = {
-						Accept: "text/plain",
-						"Content-Type": "text/plain",
-					};
-					const data = inputSrc;
+				// const expectedResult = async () => {
+				// 	const url = "https://advent.fly.dev/solve/2024/9/2";
+				// 	const headers = {
+				// 		Accept: "text/plain",
+				// 		"Content-Type": "text/plain",
+				// 	};
+				// 	const data = inputSrc;
 
-					try {
-						const response = await fetch(url, {
-							method: "POST",
-							headers: headers,
-							body: data,
-						});
+				// 	try {
+				// 		const response = await fetch(url, {
+				// 			method: "POST",
+				// 			headers: headers,
+				// 			body: data,
+				// 		});
 
-						if (!response.ok) {
-							throw new Error(`HTTP error! Status: ${response.status}`);
-						}
+				// 		if (!response.ok) {
+				// 			throw new Error(`HTTP error! Status: ${response.status}`);
+				// 		}
 
-						return await response.text();
-					} catch (error) {
-						console.error("Error:", error.message);
-						return null;
-					}
-				};
+				// 		return await response.text();
+				// 	} catch (error) {
+				// 		console.error("Error:", error.message);
+				// 		return null;
+				// 	}
+				// };
 
-				const expectedAnswer = await expectedResult();
+				// const expectedAnswer = await expectedResult();
 
 				let iterator = 0;
 
@@ -155,43 +177,41 @@
 
 				diskIndexer(diskContent);
 
-				console.log(diskContent);
+				console.log("Defragged disk", diskDefrag(diskContent, filesIndex, spacesIndex));
 
 				console.group("Outputted files");
 				console.table("File indexes", filesIndex);
 				console.table("Free space indexes", spacesIndex);
 				console.groupEnd();
 
+				// for (
+				// 	let i = 0;
+				// 	i < diskContent.length && diskContent[i] !== ".";
+				// 	i++
+				// ) {
+				// 	result += i * parseInt(diskContent[i]);
+				// }
 
-
-				for (
-					let i = 0;
-					i < diskContent.length && diskContent[i] !== ".";
-					i++
-				) {
-					result += i * parseInt(diskContent[i]);
-				}
-
-				if (result != expectedAnswer) {
-					resultDisplay(
-						"Your result is incorrect (" +
-						result +
-						"). The correct answer was " +
-						expectedAnswer +
-						"\n\n" +
-						JSON.stringify(
-							{
-								result: result,
-								expected_result: expectedAnswer,
-								delta: Math.abs(result - expectedAnswer),
-							},
-							null,
-							2
-						)
-					);
-				} else {
-					resultDisplay(result);
-				}
+				// if (result != expectedAnswer) {
+				// 	resultDisplay(
+				// 		"Your result is incorrect (" +
+				// 		result +
+				// 		"). The correct answer was " +
+				// 		expectedAnswer +
+				// 		"\n\n" +
+				// 		JSON.stringify(
+				// 			{
+				// 				result: result,
+				// 				expected_result: expectedAnswer,
+				// 				delta: Math.abs(result - expectedAnswer),
+				// 			},
+				// 			null,
+				// 			2
+				// 		)
+				// 	);
+				// } else {
+				// 	resultDisplay(result);
+				// }
 			}
 		</script>
 		<div id="debugConsole">
