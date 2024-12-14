@@ -41,6 +41,11 @@
     * {
         font-size: 1rem;
     }
+
+    h1 {
+        font-size: 1.5rem;
+        width: 80% !important;
+    }
     
     body {
         height: 100vmax !important;
@@ -80,6 +85,14 @@ body {
     height: 100vh;
     width: 100vw;
     font-family: sans-serif;
+}
+
+h1 {
+    width: fit-content;
+    text-align: center;
+    background-color: var(--card-bg);
+    padding: .5rem;
+    border-radius: var(--light-border-radius);
 }
 
 #card {
@@ -147,6 +160,8 @@ body {
     align-items: flex-start;
     justify-content: space-between;
     color: #0f0;
+    max-height: 30vh;
+    overflow-y: auto;
 }
 
 .updatedResult {
