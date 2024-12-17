@@ -30,31 +30,41 @@
 				console.log("Free", spacesIndex);
 				console.groupEnd();
 
-				// Reorder furthest right hand file with furthest left hand space with matching slots
-				for (let i = filesIndex.length - 1; i > 0; i--) {
-					// console.log(filesIndex[i]);
-					let fileStart = parseInt(filesIndex[i][0]);
-					let fileEnd = (filesIndex[i][1] || parseInt(filesIndex[i][0]));
+				// Iterate over files starting from the rightmost file
+				for (let i = filesIndex.length - 1; i >= 0; i--) {
+					if (!filesIndex[i]) continue; // Skip undefined file entries
 
-					let fileSize = (fileEnd == fileStart ? 1 : (fileEnd - fileStart)+1);
+					for (let k = 0; k < filesIndex[i].length; k++) {
+						let [fileStart, fileEnd] = filesIndex[i][k];
+						let fileSize = fileEnd - fileStart + 1;
 
-					 console.log(`File index: ${i}, File size: ${fileSize}, File position: ${fileStart} - ${fileEnd}`);
+						console.log(`Checking file at index ${i}: Start=${fileStart}, End=${fileEnd}, Size=${fileSize}`);
 
-					for (let j = 0; j < spacesIndex.length; j++) {
-						let freeStart = parseInt(spacesIndex[j][0]);
-						let freeEnd = (parseInt(spacesIndex[j][1]) || parseInt(spacesIndex[j][0]));
+						// Look for a free space that can accommodate the entire file block
+						for (let j = 0; j < spacesIndex.length; j++) {
+							let [freeStart, freeEnd] = spacesIndex[j];
+							let freeSpaceSize = freeEnd - freeStart + 1;
 
-						let freeSpaceSize = (freeEnd == freeStart ? 1 : (freeEnd - freeStart)+1);
+							console.log(`Checking space at index ${j}: Start=${freeStart}, End=${freeEnd}, Size=${freeSpaceSize}`);
 
-						 console.log(`Space index: ${i}, Space size: ${fileSize} Space position: ${freeStart} - ${freeEnd}`);
+							// If the free space is big enough for the file and is to the left
+							if (fileSize <= freeSpaceSize && freeStart < fileStart) {
+								console.log(
+									`Moving file block ${fileStart}-${fileEnd} to free space ${freeStart}-${freeStart + fileSize - 1}`
+								);
 
-						if (fileSize < freeSpaceSize || fileSize == freeSpaceSize) {
-							if (fileSize == 1  && freeStart < fileStart) {
-								console.log(`Space index: ${i}, Space position: ${freeStart} - ${freeEnd} will be switched with File index: ${i}, File position: ${fileStart} - ${fileEnd}`);
-								[disk[freeStart], disk[fileStart]] = [disk[fileStart], disk[freeStart]];
-								console.log(disk);
+								// Move the entire block of files
+								for (let n = 0; n < fileSize; n++) {
+									disk[freeStart + n] = disk[fileStart + n];
+									disk[fileStart + n] = ".";
+								}
+
+								// Update indices
 								spacesIndex = freeSpaceIndexUpdate(disk);
-								break;
+								filesIndex = fileIndexUpdate(disk);
+
+								console.log("Disk after move:", disk);
+								break; // Stop looking for spaces for this file
 							}
 						}
 					}
@@ -64,61 +74,77 @@
 				return disk;
 			}
 
-			function freeSpaceIndexUpdate (arr) {
-				spacesIndex = [];
-				let spaceIndex = 0;
+			function freeSpaceIndexUpdate(disk) {
+				let spacesIndex = [];
+				let start = null;
 
-				for (let i = 0; i < arr.length; i++) {
-					let start = i;
-					let end = i;
-
-					if (arr[i] === ".") {
-						// Initialize the array if not already
-						if (!spacesIndex[spaceIndex]) spacesIndex[spaceIndex] = [];
-						// It's a space range
-						while (end < arr.length && arr[end] === ".") {
-							end++;
-						}
-						if (!spacesIndex[spaceIndex][0]) spacesIndex[spaceIndex].push([start, end - 1]);
-						spaceIndex++;
+				for (let i = 0; i < disk.length; i++) {
+					if (disk[i] === "." && start === null) {
+						start = i;
+					} else if (disk[i] !== "." && start !== null) {
+						spacesIndex.push([start, i - 1]);
+						start = null;
 					}
 				}
+				if (start !== null) spacesIndex.push([start, disk.length - 1]);
+
 				return spacesIndex;
 			}
 
+			function fileIndexUpdate(disk) {
+				let filesIndex = [];
+				let start = null;
+
+				for (let i = 0; i < disk.length; i++) {
+					if (disk[i] !== "." && start === null) {
+						start = i;
+					} else if (disk[i] === "." && start !== null) {
+						const fileIndex = parseInt(disk[start]);
+						if (!filesIndex[fileIndex]) filesIndex[fileIndex] = [];
+						filesIndex[fileIndex].push([start, i - 1]);
+						start = null;
+					}
+				}
+				if (start !== null) {
+					const fileIndex = parseInt(disk[start]);
+					if (!filesIndex[fileIndex]) filesIndex[fileIndex] = [];
+					filesIndex[fileIndex].push([start, disk.length - 1]);
+				}
+
+				return filesIndex;
+			}
+
 			function diskIndexer(arr) {
-				filesIndex = [];
-				spacesIndex = [];
+				let filesIndex = [];
+				let spacesIndex = [];
 				let spaceIndex = 0;
-				let diskIndex = 0;
 
 				for (let i = 0; i < arr.length;) {
 					let start = i;
 					let end = i;
 
 					if (arr[i] === ".") {
-						// Initialize the array if not already
-						if (!spacesIndex[spaceIndex]) spacesIndex[spaceIndex] = [];
-						// It's a space range
+						// Handle spaces
 						while (end < arr.length && arr[end] === ".") {
 							end++;
 						}
-						if (!spacesIndex[spaceIndex][0]) spacesIndex[spaceIndex].push([start, end - 1]);
-						spaceIndex++;
+						spacesIndex.push([start, end - 1]);
 					} else {
-						diskIndex = parseInt(arr[i]);
-						// Initialize the array if not already
-						if (!filesIndex[diskIndex]) filesIndex[diskIndex] = [];
-						// It's a number range
-						while (end < arr.length && arr[end] !== ".") {
+						// Handle files
+						const currentFile = arr[i];
+						while (end < arr.length && arr[end] === currentFile) {
 							end++;
 						}
-						if (!filesIndex[diskIndex][0]) filesIndex[diskIndex].push([start, end - 1]);
-						diskIndex++;
+
+						const fileIndex = parseInt(currentFile, 10);
+						if (!filesIndex[fileIndex]) filesIndex[fileIndex] = [];
+						filesIndex[fileIndex].push([start, end - 1]);
 					}
 
-					i = end; // Move the index to the next unprocessed element
+					i = end;
 				}
+
+				return [ filesIndex, spacesIndex ];
 			}
 
 			async function strParse() {
@@ -175,7 +201,7 @@
 
 				// newReorder(diskContent);
 
-				diskIndexer(diskContent);
+				[filesIndex, spacesIndex] = diskIndexer(diskContent);
 
 				console.log("Defragged disk", diskDefrag(diskContent, filesIndex, spacesIndex));
 
